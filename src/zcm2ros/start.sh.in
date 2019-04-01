@@ -1,0 +1,4 @@
+#!/bin/bash
+
+source @DEST_DIR@/../../devel/setup.bash
+roslaunch zcm2ros zcm2ros.launch

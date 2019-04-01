@@ -1,0 +1,180 @@
+/** @mainpage Результат поиска препятствий от стереопары */ 
+
+/**
+ * @struct ZcmStereoPairPoint2D
+ * @brief Сообщение содержит координаты точки относительно общей системы координат
+ *
+ * @var ZcmStereoPairPoint2D::x
+ * @brief - смещение точки по оси x
+ *
+ * @var ZcmStereoPairPoint2D::y
+ * @brief - смещение точки по оси y
+ *
+ *
+ */
+struct ZcmStereoPairPoint2D
+{
+    double x;
+    double y;
+}
+
+/**
+ * @struct ZcmStereoPairPoint3D
+ * @brief Сообщение содержит координаты точки в трёхмерном пространстве
+ *
+ * @var ZcmStereoPairPoint3D::x
+ * @brief - смещение точки по оси x
+ *
+ * @var ZcmStereoPairPoint3D::y
+ * @brief - смещение точки по оси y
+ *
+ * @var ZcmStereoPairPoint3D::z
+ * @brief - смещение точки по оси z
+ *
+ */
+struct ZcmStereoPairPoint3D
+{
+    double x;
+    double y;
+    double z;
+}
+
+/**
+ * @struct ZcmStereoPairReconstruction
+ * @brief Сообщение содержит координаты реконструированных точек в трёхмерном пространстве
+ *
+ * @var ZcmStereoPairReconstruction::service
+ * @brief - сообщение с временем получения данных и временем их обработки
+ *
+ * @var ZcmStereoPairReconstruction::count
+ * @brief - количество реконструированных точек
+ *
+ * @var ZcmStereoPairReconstruction::points
+ * @brief - реконструированные точки
+ *
+ * @var ZcmStereoPairReconstruction::jpeg_frame
+ * @brief - кадр, реконструкция которого приведена
+ *
+ */
+struct ZcmStereoPairReconstruction
+{
+    ZcmService service;
+	int32_t count;
+	ZcmStereoPairPoint3D points[count];
+    ZcmCameraBaslerJpegFrame jpeg_frame;
+}
+
+/**
+ * @struct ZcmStereoPairObstacleObject
+ * @brief Сообщение содержит координаты точки относительно камеры
+ *
+ * @var ZcmStereoPairObstacleObject::boundingBox
+ * @brief - список точек, описывающих найденный объект в прямоугольник, покрывающий все точки припятствия
+ *
+ * @var ZcmStereoPairObstacleObject::generalPoint
+ * @brief - ближайшая к камере точка прямоугольника, описывающего объект
+ *
+ * @var ZcmStereoPairObstacleObject::label
+ * @brief - строка, характеризующая класс препятствия, если таковой известен
+ *
+ * @var ZcmStereoPairObstacleObject::probability
+ * @brief - вероятностная характеристика принадлежности препятствия к опознанному классу, если таковой известен, принимает значения от 0 до 1
+ *
+ * @var ZcmStereoPairObstacleObject::max_height
+ * @brief - максимальная точка препятствия по высоте в метрах
+ *
+ * @var ZcmStereoPairObstacleObject::min_height
+ * @brief - минимальная точка препятствия по высоте в метрах
+ *
+ * @var ZcmStereoPairObstacleObject::is_moving
+ * @brief - флаг, указывающий на наличиего движения у объекта
+ *
+ *
+ */
+struct ZcmStereoPairObstacleObject
+{
+    ZcmStereoPairPoint2D boundingBox[4];
+    ZcmStereoPairPoint2D generalPoint;
+    string label;
+    double probability;
+    double max_height;
+    double min_height;
+    boolean is_moving;
+}
+
+/**
+ * @struct ZcmDisparityMap
+ * @brief Сообщение содержит информацию
+ *
+ * @var jpeg_frame
+ * @brief кадр левой камеры, которому соответствует данная карта диспаратности
+ *
+ * @var height
+ * @brief высота в пикселях карты диспаратности
+ *
+ * @var width
+ * @brief ширина в пикселях карты диспаратности
+ *
+ * @var size
+ * @brief количество пикселей в карте диспаратности
+ *
+ * @var scale
+ * @brief масштаб кадра относительно оригинального, при вычислении диспаратности
+ *
+ * @var padding
+ * @brief массив, содержащий значения отступов от верхней, првой, нижней, левой границ изображений соответственно.
+ * Все значения приведены в пикселях.
+ *
+ * @var disp
+ * @brief карта диспаратности в виде одномерного байтового массива
+ *
+ * @var R
+ * @brief массив из трёх значений поворота камеры (в радианах) относительно линии горизонта, перпендикуляра к опорной поверхности и лучу в бесконечную плоскость кадра соответственно
+ *
+ * @var T
+ * @brief массив из трёх значений смещения камеры (в метрах) относительно нашего центра координат по горизонтальному смещению, вертикальному смещению и смещению в глубину соответственно
+ *
+ * @var Q
+ * @brief матрица реконструкции 4x4 (opencv perspective transformation matrix)
+ *
+ *
+ */
+struct ZcmDisparityMap
+{
+    ZcmService service;
+    ZcmCameraBaslerJpegFrame jpeg_frame;
+
+    int32_t height;
+    int32_t width;
+    int32_t size;
+
+    double scale;
+    int32_t padding[4];
+
+    byte disp[size];
+
+    double Q[16];
+
+    double R[3];
+    double T[3];
+}
+
+/**
+ * @struct ZcmStereoPairFoundedObstacles
+ * @brief Сообщение содержит координаты точки относительно камеры
+ *
+ * @var ZcmStereoPairFoundedObstacles::count
+ * @brief - количество найденных препятствий
+ *
+ * @var ZcmStereoPairFoundedObstacles::obstacles
+ * @brief - список найденных препятствий
+ *
+ *
+ */
+struct ZcmStereoPairFoundedObstacles
+{
+    ZcmService service;
+
+    int32_t count;
+    ZcmStereoPairObstacleObject obstacles[count];
+}

@@ -1,0 +1,5 @@
+struct ZcmLocalizationDebug
+{
+	ZcmService service;
+	int16_t geoline_id;
+}

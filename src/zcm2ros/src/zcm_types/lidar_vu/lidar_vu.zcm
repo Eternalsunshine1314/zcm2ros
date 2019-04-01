@@ -1,0 +1,61 @@
+/** @mainpage Сообщения от Lidar Vu
+ * Данный документ содержит описание сообщений для работы
+ * с лидаром Lidar Vu8.
+ */ 
+
+
+
+/**
+ * @struct ZcmLidarVuPoint
+ * @brief Содержит информацию о точке(объекте) обнаруженном устройством.
+ * 
+ * @var ZcmLidarVuPoint::channel        
+ * @brief - номер канала (от 0 до 7)
+ * 
+ * @var ZcmLidarVuPoint::x  
+ * @brief - координата по оси X (м) 
+ * 
+ * @var ZcmLidarVuPoint::y
+ * @brief - координата по оси Y (м) 
+ * 
+ * @var ZcmLidarVuPoint::z
+ * @brief - высота установки (м) 
+ * 
+ * @var ZcmLidarVuPoint::amplitude
+ * @brief - характеристика. Чем больше тем сильнее отраженный сигнал
+ * 
+ * @var ZcmLidarVuPoint::flag_info
+ * @brief - Информация о измерении: \n
+ *                  0 - The detection is valid \n
+ *                  1 - The detection is the result of object demerging \n
+ *                  2 - The detection is saturated. \n 
+ *                  
+ */
+struct ZcmLidarVuPoint
+{
+    int8_t channel;
+
+    float x;   
+    float y;    
+    float z;
+    float amplitude;   
+
+    int8_t flag_info;            
+}
+
+
+
+
+/**
+ * @struct ZcmLidarVuScan
+ * @brief Все сообщения полученные на одно сканирование
+ * 
+ */
+struct ZcmLidarVuScan
+{
+    ZcmService service;
+
+    int16_t scan_size;
+    ZcmLidarVuPoint points[scan_size];
+}
+

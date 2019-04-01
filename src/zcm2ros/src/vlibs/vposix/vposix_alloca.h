@@ -1,0 +1,57 @@
+/****************************************************************************************
+**
+**  VLIBS codebase, NIIAS
+**
+**  Authors:
+**  Alexandre Gromtsev aka elapidae     elapidae@yandex.ru
+**  Nadezhda Churikova aka claorisel    claorisel@gmail.com
+**  Ekaterina Boltenkova aka kataretta  kitkat52@yandex.ru
+**  Ivan Deylid aka sid1057             ivanov.dale@gmail.com>
+**
+**  GNU Lesser General Public License Usage
+**  This file may be used under the terms of the GNU Lesser General Public License
+**  version 3 as published by the Free Software Foundation and appearing in the file
+**  LICENSE.LGPL3 included in the packaging of this file. Please review the following
+**  information to ensure the GNU Lesser General Public License version 3 requirements
+**  will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
+****************************************************************************************/
+
+
+#ifndef VPOSIX_ALLOCA_H
+#define VPOSIX_ALLOCA_H
+
+#include <stddef.h>
+#include <type_traits>
+
+//=======================================================================================
+namespace vposix
+{
+    //===================================================================================
+    //  Выделение памяти на стеке.
+    class Alloca
+    {
+        static constexpr bool do_trace() { return false; }
+
+    public:
+        static void* do_allocate( size_t sz );
+
+        template<typename T>
+        static T* allocate( size_t elem_sz );
+    };
+    //===================================================================================
+
+
+    //===================================================================================
+    //  IMPLEMENTATION
+    //===================================================================================
+    template<typename T>
+    T* Alloca::allocate( size_t elem_sz )
+    {
+        static_assert( std::is_trivial<T>::value, "" );
+        return static_cast<T*>( do_allocate(elem_sz * sizeof(T)) );
+    }
+    //===================================================================================
+} // namespace vposix
+//=======================================================================================
+
+#endif // VPOSIX_ALLOCA_H

@@ -1,0 +1,106 @@
+/**
+ * @struct ZcmGeographicCoord
+ * @brief Координата в географической системе
+ *
+ * @var ZcmGeographicCoord::lat
+ * @brief - широта, градус
+ *
+ * @var ZcmGeographicCoord::lon
+ * @brief - долгота, градус
+ *
+ */
+struct ZcmGeographicCoord
+{
+    double lat;
+    double lon;
+}
+
+/**
+ * @struct ZcmUtmCoord
+ * @brief Координата в системе UTM
+ *
+ * @var ZcmUtmCoord::easting
+ * @brief - восточное смещение, метр
+ *
+ * @var ZcmUtmCoord::northing
+ * @brief - северное смещение, метр
+ *
+ * @var ZcmUtmCoord::zone
+ * @brief - номер зоны
+ *
+ * @var ZcmUtmCoord::zoneLetter
+ * @brief - буква зоны
+ *
+ */
+struct ZcmUtmCoord {
+    double easting;
+    double northing;
+    int32_t zone;
+    string zone_letter;
+}
+
+/**
+ * @struct ZcmVelocityVector
+ * @brief Вектор скорости
+ *
+ * @var ZcmVelocityVector::vx
+ * @brief - скорость по оси x, м/с
+ *
+ * @var ZcmVelocityVector::vy
+ * @brief - скорость по оси y, м/с
+ *
+ */
+struct ZcmVelocityVector {
+    double vx;
+    double vy;
+}
+
+
+/**
+ * @struct ZcmNavFilter
+ * @brief Отфильтрованные данные от навигатора
+ *
+ * @var ZcmNavFilter::utmCoordinates
+ * @brief - координаты в UTM
+ *
+ * @var ZcmNavFilter::geographicCoordinates
+ * @brief - географические координаты
+ *
+ * @var ZcmNavFilter::velocityVector
+ * @brief - вектор скорости
+ *
+ * @var ZcmNavFilter::speed (м/с)
+ * @brief - скорость.
+ *          
+ * @var ZcmNavFilter::azimuth_calculated (градусы)
+ * @brief - азимут вычесленный.
+ *          
+ * @var ZcmNavFilter::azimuth_measured (градусы)
+ * @brief - азимут измеренный.
+ *          
+ * @var ZcmNavFilter::x         
+ * @brief - координата X (метры).
+ *          
+ * @var ZcmNavFilter::y         
+ * @brief - координата Y (метры).
+ *          
+ * @var ZcmNavFilter::z
+ * @brief - координата Z (метры).
+ * 
+ */
+struct ZcmNavFilter
+ {
+    ZcmService service;
+
+    ZcmUtmCoord  utm_coordinates;
+    ZcmGeographicCoord geographic_coordinates;
+    ZcmVelocityVector velocity_vector;
+    
+    double speed;
+    double azimuth_calculated;
+    double azimuth_measured;    
+    
+    double x;
+    double y;
+    double z;
+}

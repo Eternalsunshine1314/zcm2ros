@@ -1,0 +1,8 @@
+<launch>
+    <node pkg="tf" type="static_transform_publisher" name="map_to_bird" args="64 0 0 0 0 0 1 map bird 10" />
+    <node pkg="tf" type="static_transform_publisher" name="map_to_lidar_frame" args="0 0 1.1 0 0 0 1 map lidar_frame 10 " />
+    <node pkg="tf" type="static_transform_publisher" name="map_to_lidar_marker" args="0 0 1.1 0 0 0 1 map lidar_marker 10" />
+    <node pkg="tf" type="static_transform_publisher" name="map_to_lidar_cluster_marker" args="0 0 1.1 0 0 0 1 map lidar_cluster_marker 10" />
+    <node pkg="tf" type="static_transform_publisher" name="map_to_radar_marker" args="0 0 0 0 0 0 1 map radar_marker 10" />
+</launch>
+

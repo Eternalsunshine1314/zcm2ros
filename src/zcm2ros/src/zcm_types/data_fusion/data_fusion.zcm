@@ -1,0 +1,77 @@
+/** @mainpage Сообщения взаимодействия с модулем data_fusion (fusion)
+ */ 
+
+/**
+ * @struct ZcmFusionZonePredictedObstacle
+ * @brief Препятствие в одной зоне контроля
+ *
+ * @var ZcmClusterAttributes::obstacle_type
+ * @brief - класс объекта:
+ *                  OBSTACLE_TYPE_UNKNOWN
+ *                  OBSTACLE_TYPE_HUMAN
+ *                  OBSTACLE_TYPE_TRAFFIC_LIGHT
+ *                  OBSTACLE_TYPE_CAR
+ *
+ * @var ZcmFusionZonePredictedObstacle::zone
+ * @brief - идентификатор зоны
+ *
+ * @var ZcmFusionZonePredictedObstacle::distance
+ * @brief - расстояние до препятствия, метр
+ */
+struct ZcmFusionZonePredictedObstacle
+{
+    int8_t zone;
+    int8_t obstacle_type;
+    double distance;    
+}
+
+/**
+ * @struct ZcmFusionPredictedObstacle
+ * @brief Препятствия во всех зонах контроля
+ *
+ * @var ZcmFusionPredictedObstacle::service
+ * @brief - служебное сообщение
+ *
+ * @var ZcmFusionPredictedObstacle::ZONE_RED
+ * @brief - идентификатор "красной" зоны (габарит подвижного состава)
+ *
+ * @var ZcmFusionPredictedObstacle::ZONE_YELLOW
+ * @brief - идентификатор "желтой" зоны (зона повышенного внимания со снижением скорости)
+ *
+ * @var ZcmFusionPredictedObstacle::ZONE_BROWN
+ * @brief - идентификатор "коричневой" зоны (зона отслеживания объектов)
+ *
+ * @var ZcmFusionPredictedObstacle::OBSTACLE_TYPE_UNKNOWN
+ * @brief - класс объекта - неизвестный
+ *
+ * @var ZcmFusionPredictedObstacle::OBSTACLE_TYPE_HUMAN
+ * @brief - класс объекта - человек
+ *
+ * @var ZcmFusionPredictedObstacle::OBSTACLE_TYPE_TRAFFIC_LIGHT
+ * @brief - класс объекта - светофор
+ *
+ * @var ZcmFusionPredictedObstacle::OBSTACLE_TYPE_CAR
+ * @brief - класс объекта - вагон
+ *
+ * @var ZcmFusionPredictedObstacle::obstacles_count
+ * @brief - количество препятствий
+ *
+ * @var ZcmFusionPredictedObstacle::obstacles
+ * @brief - препятствия
+ */
+struct ZcmFusionPredictedObstacle
+{
+    ZcmService service;
+
+    const int8_t ZONE_RED = 1;
+    const int8_t ZONE_YELLOW = 2;
+    const int8_t ZONE_BROWN = 3;
+
+    const int8_t OBSTACLE_TYPE_UNKNOWN = 0;
+    const int8_t OBSTACLE_TYPE_HUMAN = 1;
+    const int8_t OBSTACLE_TYPE_TRAFFIC_LIGHT = 2;
+    const int8_t OBSTACLE_TYPE_CAR = 3;
+
+    int8_t obstacles_count;
+    ZcmFusionZonePredictedObstacle obstacles[obstacles_count];
+}

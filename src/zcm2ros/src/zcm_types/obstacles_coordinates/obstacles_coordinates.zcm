@@ -1,0 +1,137 @@
+/**
+ * @struct ZcmObstacleUtmCoordinates
+ * @brief Данные о координатах объектов обнаруженных лидаром в UTM
+ *
+ * @var ZcmObstacleUtmCoordinates::zone
+ * @brief - номер зоны UTM
+ *
+ * @var ZcmObstacleUtmCoordinates::zone_letter
+ * @brief - буква зоны UTM
+ * 
+ * @var ZcmObstacleUtmCoordinates::easting
+ * @brief - координата x в UTM
+ *
+ * @var ZcmObstacleUtmCoordinates::northing
+ * @brief - координата y в UTM
+ * 
+ */
+struct ZcmObstacleUtmCoordinates
+ {  
+    int32_t zone;
+    string zone_letter;
+    double easting;
+    double northing;        
+}
+
+/**
+ * @struct ZcmObstacleLocalCoordinates
+ * @brief Данные о координатах объектов обнаруженных лидаром в локальной системе
+ *
+ * @var ZcmObstacleLocalCoordinates::x (метры)
+ * @brief - координата x
+ *
+ * @var ZcmObstacleLocalCoordinates::y (метры)
+ * @brief - координата y
+ * 
+ * @var ZcmObstacleLocalCoordinates::z  (метры)
+ * @brief - координата z
+ * 
+ */
+struct ZcmObstacleLocalCoordinates
+ {
+    double x;
+    double y;
+    double z;
+}
+
+/**
+ * @struct ZcmObstacleGeoCoordinates
+ * @brief Данные о координатах объектов обнаруженных лидаром в локальной системе
+ *
+ * @var ZcmObstacleGeoCoordinates::lat (градусы)
+ * @brief - широта
+ *
+ * @var ZcmObstacleGeoCoordinates::lon (градусы)
+ * @brief - долгота
+ * 
+ */
+struct ZcmObstacleGeoCoordinates
+{
+    double lat;
+    double lon;
+}
+
+/**
+ * @struct ZcmObstacleProperties
+ * @brief  свойства объекта
+ *
+ * @var ZcmObstacleProperties::width (метры)
+ * @brief - ширина
+ *
+ * @var ZcmObstacleProperties::length (метры)
+ * @brief - длинна
+ * 
+ * @var ZcmObstacleProperties::angle (граусы)
+ * @brief - угол поворота обхекта
+ * 
+ */
+struct ZcmObstacleProperties
+{
+    double width;
+    double length;
+    double angle;
+}
+
+/**
+ * @struct ZcmObstacle
+ * @brief  Данные об объекте
+ *
+ * @var ZcmObstacle::cluster_id 
+ * @brief - номер объекта
+ *
+ * @var ZcmObstacle::object_type
+ * @brief - тип объекта
+ * 
+ * @var ZcmObstacle::object_properies
+ * @brief - свойства объекта
+ * 
+ * @var ZcmObstacle::local_coordinates
+ * @brief - координаты в локальной системе
+ * 
+ * @var ZcmObstacle::utm_coordinates
+ * @brief - координаты в UTM
+ * 
+ * @var ZcmObstacle::geo_coordinates
+ * @brief - географические координаты
+ * 
+ */
+struct ZcmObstacle
+{
+    const int8_t STATIC_OBJECT = 0;
+    const int8_t MOVING_OBJECT = 1;
+    int32_t cluster_id;
+    int32_t object_type;
+    ZcmObstacleProperties object_properies;
+    ZcmObstacleLocalCoordinates local_coordinates;
+    ZcmObstacleUtmCoordinates utm_coordinates;
+    ZcmObstacleGeoCoordinates geo_coordinates;    
+}
+
+/**
+ * @struct ZcmObstacleCoordinates
+ * @brief Данные о координатах объектов обнаруженных лидаром
+ *
+ * @var ZcmObstacleCoordinates::objectsCount
+ * @brief - кол-во объектов
+ *
+ * @var ZcmObstacleCoordinates::objects
+ * @brief - список объектов
+ * 
+ */
+struct ZcmObstacleCoordinates
+ {
+    ZcmService service;
+
+    int32_t objects_count;
+    ZcmObstacle objects[objects_count];
+}

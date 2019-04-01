@@ -1,0 +1,23 @@
+/**
+ * @struct ZcmHomography
+ * @brief Содержит информацию о матрицах поворота и смещения относительно пары изображений.
+ * Описывает изменение положения точек на плоскости по координатам X, Y, Z в течение промежутка времени
+ *
+ *
+ * @var ZcmHomography::rotation
+ * @brief - вектор вращения
+ *
+ * @var ZcmHomography::translation
+ * @brief - вектор смещения. Элементы вектора представлены в метрической системе координат
+ *
+ * @var ZcmHomography::normal
+ * @brief - вектор нормали плоскости
+ */
+struct ZcmHomography
+{
+	ZcmService service;
+
+    float rotation [3];
+    float translation [3];
+    float normal [3];
+}

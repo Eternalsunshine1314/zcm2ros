@@ -1,0 +1,50 @@
+/**
+ * @struct ZcmMalsSwitch
+ * @brief описание стрелок
+ * 
+ * @var ZcmMalsSwitch::state
+ * @brief - состояние стрелки: \n
+ *          0 - SWITCH_STATE_UNKNOWN - неопределено \n
+ *          1 - SWITCH_STATE_PLUS \n
+ *          2 - SWITCH_STATE_MINUS \n
+*               
+ * @var ZcmMalsSwitch::name  
+ * @brief - имя стрелки в карте
+ *                     
+ */
+struct ZcmMalsSwitch
+{
+  int8_t state;
+  string name;
+}
+
+/**
+ * @struct ZcmMalsRoute
+ * @brief информация от MAЛС о текущем пути
+ *
+ * @var ZcmMalsRoute::count
+ * @brief - количество стрелок
+ *          
+ * @var ZcmMalsRoute::switches  
+ * @brief - массив стрелок
+ *          
+ * @var ZcmMalsRoute::current_section         
+ * @brief - имя текущей секции занимаемой локомотивом
+ * 
+ * @var ZcmMalsRoute::border1/border2
+ * @brief - начало/конец маршрута                  
+ */
+struct ZcmMalsRoute
+{
+    ZcmService service;
+
+    const int8_t SWITCH_STATE_UNKNOWN = 0;
+    const int8_t SWITCH_STATE_PLUS = 1;
+    const int8_t SWITCH_STATE_MINUS = 2;
+
+    int16_t count;
+    ZcmMalsSwitch switches[count];
+    string current_section;
+    string border1;
+    string border2;
+}

@@ -1,0 +1,509 @@
+/** @mainpage Сообщения от лидара Scala
+ * Данный документ содержит описание сообщений для работы
+ * с лидаром Ibeo Scala.
+ */ 
+
+
+/**
+ * @struct ZcmLidarScalaPoint
+ * @brief Сообщение содержит информацию о всех точках полученных за одно сканирование
+ *
+ * @var ZcmLidarScalaPoint::echoId
+ * @brief - номер переотражения данной точки. От 0 до 2
+ * 
+ * @var ZcmLidarScalaPoint::layerId
+ * @brief - номер сканирующего луча. О - 3
+ * 
+ * @var ZcmLidarScalaPoint::flags
+ * @brief - тип точки: \n
+ * 				0x1 - transparent \n
+ * 				0x2 - осадки\n
+ * 				0x4 - земля\n
+ * 				0x8 - грязь\n
+ * 
+ * @var ZcmLidarScalaPoint::horizontalAngle
+ * @brief - значение угла в полярной системе координат (тики). \n
+ * 			Тик = ZcmLidarScalaDataScan::anglePerTick градусов 
+ * 		 
+ * @var ZcmLidarScalaPoint::radialDistance
+ * @brief - значение расстояния в полярной системе координат (м)
+ * 
+ * @var ZcmLidarScalaPoint::x
+ * @brief - расстояние до точки по оси Х в декартовой системе координат (м)
+ * 
+ * @var ZcmLidarScalaPoint::y
+ * @brief - расстояние до точки по оси Y в декартовой системе координат (м)
+ * 
+ * @var ZcmLidarScalaPoint::z
+ * @brief - расстояние до точки по оси Z в декартовой системе координат (м)
+ * 
+ * @var ZcmLidarScalaPoint::echoPulseWidth
+ * @brief - ширина импульса переотражения (м)
+ * 
+ * 
+ */ 
+struct ZcmLidarScalaPoint
+{
+	int16_t echoId;
+	int16_t layerId;
+
+	int32_t flags;
+
+	int32_t horizontalAngle;
+	float radialDistance;
+
+	float x;
+	float y;
+	float z;
+
+	float echoPulseWidth;
+}
+
+/**
+ * @struct ZcmLidarScalaDataScan
+ * @brief Сообщение содержит информацию о всех точках полученных за одно сканирование
+ *
+ * @var ZcmLidarScalaDataScan::scanNumber
+ * @brief - номер скана. Увеличивается с каждым новым сканированием
+ * 
+ * @var ZcmLidarScalaDataScan::rotatingDirection
+ * @brief - направление вращения: \n
+ * 				 0 - по часовой стрелке \n
+ * 				 1 - против часовой стрелки 
+ *
+ * @var ZcmLidarScalaDataScan::anglePerTick
+ * @brief - 1/32 градуса в тике
+ * 
+ * @var ZcmLidarScalaDataScan::anglePerLayer
+ * @brief - количество градусов на уровень (Layer)
+ * 
+ * @var ZcmLidarScalaDataScan::scannerHeight
+ * @brief - высота на которой расположен сенсор (м)
+ * 
+ * @var ZcmLidarScalaDataScan::nbOfPoints
+ * @brief - количество точек в одном сканировании
+ * 
+ * @var ZcmLidarScalaDataScan::scanPoints
+ * @brief - массив точек полученных за одно сканирование
+ *                         
+ */
+struct ZcmLidarScalaDataScan
+{
+    ZcmService service;
+
+	int32_t scanNumber;
+	int32_t rotatingDirection;
+
+	float scannerHeight;
+
+	const float anglePerTick = 0.03125;
+	const float anglePerLayer = 0.8;
+
+	int32_t nbOfPoints;
+	ZcmLidarScalaPoint scanPoints[nbOfPoints];
+
+}
+
+
+/**
+ * @struct ZcmLidarScalaContourPoint
+ * @brief Вспомогательная структура описывающая точки контура объекта
+ * 
+ */ 
+struct ZcmLidarScalaContourPoint
+{
+	float posX;
+	float posY;
+	float posXSigma;
+	float posYSigma;
+	int8_t corrCoeff;
+	float existenceProbability;
+}
+
+/**
+ * @struct ZcmLidarScalaUnfilteredObjectAttributes
+ * @brief Сырые не отфильтрованные параметры
+ *
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::relativeTimeOfMeasure
+ * @brief - время с момента начала измерения (мс)
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::positionClosestObjectPointX
+ * @brief - ближайшая точка объекта по оси X (м)
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::positionClosestObjectPointY
+ * @brief - ближайшая точка объекта по оси Y (м)
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::objectBoxSizeX
+ * @brief - расстояние до объекта по оси X (м)
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::objectBoxSizeY
+ * @brief - расстояние до объекта по оси Y (м)
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::objectBoxSizeWidth
+ * @brief - ширина объекта (м)
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::objectBoxSizeLength
+ * @brief - длина объекта (м)
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::objectBoxSizeSigmaX
+ * @brief - погрешность размера объекта по X (м)
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::objectBoxSizeSigmaY
+ * @brief - погрешность размера объекта по Y (м)
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::objectBoxOrientation
+ * @brief - Угол поворота объекта (градусы)
+ *  
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::objectBoxOrientationSigma
+ * @brief - Погрешность угла поворота объекта (градусы)
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::objectBoxHeight
+ * @brief - высота объекта (м)
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::referencePointLocation 
+ * @brief - расположение базовой точки объекта \n
+ * 				0x0 - CenterOfGravity \n
+ *				0x1 - FrontLeft       \n 
+ *				0x2 - FrontRight      \n 
+ *				0x3 - RearRight       \n
+ *				0x4 - RearLeft        \n
+ *				0x5 - FrontCenter     \n
+ *				0x6 - RightCenter     \n
+ *				0x7 - RearCenter      \n
+ *				0x8 - LeftCenter      \n
+ *				0x9 - ObjectCenter    \n
+ *				0xff - Unknown         
+ *  
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::referencePointCoordX
+ * @brief - расстояние до базовой точки по оси X (м)
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::referencePointCoordY
+ * @brief - расстояние до базовой точки по оси Y (м)
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::referencePointCoordSigmaX
+ * @brief - погрешность расстояния до базовой точки по оси X (м)
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::referencePointCoordSigmaY
+ * @brief - погрешность Расстояние до базовой точки по оси X (м)
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::referencePointPositionCorrCoeff
+ * @brief - ???
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::existenceProbaility
+ * @brief - вероятность существования
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::possibleNbOfContourPoints
+ * @brief - количество точек контура объекта
+ * 
+ * @var ZcmLidarScalaUnfilteredObjectAttributes::contourPoints
+ * @brief - точки контура объекта
+ * 
+ */ 
+struct ZcmLidarScalaUnfilteredObjectAttributes
+{
+	int32_t relativeTimeOfMeasure;
+	float positionClosestObjectPointX;
+	float positionClosestObjectPointY;
+
+	float objectBoxSizeX;
+	float objectBoxSizeY;
+
+	float objectBoxSizeSigmaX;
+	float objectBoxSizeSigmaY;
+
+	float objectBoxOrientation;
+	float objectBoxOrientationSigma;
+	float objectBoxHeight;
+
+	int16_t referencePointLocation; 
+	float referencePointCoordX;
+	float referencePointCoordY;
+
+	float referencePointCoordSigmaX;
+	float referencePointCoordSigmaY;
+
+	int16_t referencePointPositionCorrCoeff;
+
+	float existenceProbaility;
+
+	int16_t possibleNbOfContourPoints;
+	ZcmLidarScalaContourPoint contourPoints[possibleNbOfContourPoints];
+}
+
+
+/**
+ * @struct ZcmLidarScalaFilteredObjectAttributes
+ * @brief Отфильтрованные параметры
+ *
+ * @var ZcmLidarScalaFilteredObjectAttributes::objectAge
+ * @brief - количество сканирований на протяжении которых данный объект существует
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::hiddenStatusAge
+ * @brief - количество сканирований на протяжении которых данный объект был предсказан
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::dynamicFlagState
+ * @brief - динамическое состояние объекта
+ * 				 0 - объект в стадии инициализации
+ * 				 1 - объект в стадии отслеживания
+ * 				 
+ * @var ZcmLidarScalaFilteredObjectAttributes::dynamicFlagProperty
+ * @brief - динамическое состояние объекта
+ * 				1 - dynamic and moving
+ *				2 - dynamic and stopped
+ *				3 - internal
+ *				4 - a priori stationary
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::relativeTimeOfMeasure
+ * @brief - время с момента начала измерения (мс)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::positionClosestObjectPointX
+ * @brief - ближайшая точка объекта по оси X (м)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::positionClosestObjectPointY
+ * @brief - ближайшая точка объекта по оси Y (м)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::relativeVelocityX
+ * @brief - относительная скорость по оси X (м/с)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::relativeVelocityY
+ * @brief - относительная скорость по оси Y (м/с)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::relativeVelocitySigmaX
+ * @brief - погрешность относительной скорости по оси X (м/с)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::relativeVelocitySigmaY
+ * @brief - погрешность относительной скорости по оси Y (м/с)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::classification
+ * @brief - классификация объекта \n
+ * 					0  - Unclassified   \n
+ *					1  - UnknownSmall   \n
+ *					2  - UnknownBig     \n
+ *					3  - Pedestrian    \n
+ *					4  - Bike           \n
+ *					5  - Car            \n
+ *					6  - Truck          \n
+ *					10 - Overdrivable  \n
+ *					11 - Underdrivable  \n
+ *					12 - Bicycle        \n
+ *					15 - Motorbike      \n
+ *					16 - Infrastructure \n
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::classificationQuality
+ * @brief - ???
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::classificationAge
+ * @brief - количество сканирований на протяжении которых данный объект относится к этому классу
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::objectBoxSizeX
+ * @brief - расстояние до объекта по оси X (м)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::objectBoxSizeY
+ * @brief - расстояние до объекта по оси Y (м)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::objectBoxSizeWidth
+ * @brief - ширина объекта (м)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::objectBoxSizeLength
+ * @brief - длина объекта (м)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::objectBoxSizeSigmaX
+ * @brief - погрешность по оси X (м)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::objectBoxSizeSigmaY
+ * @brief - погрешность по оси X (м)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::objectBoxOrientation
+ * @brief - угол поворота объекта (градусы)
+ *  
+ * @var ZcmLidarScalaFilteredObjectAttributes::objectBoxOrientationSigma
+ * @brief - погрешность угла поворота объекта (градусы)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::objectBoxHeight
+ * @brief - высота объекта (м)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::referencePointLocation 
+ * @brief -  расположение базовой точки объекта \n
+ * 				0x0 - CenterOfGravity \n
+ *				0x1 - FrontLeft       \n 
+ *				0x2 - FrontRight      \n 
+ *				0x3 - RearRight       \n
+ *				0x4 - RearLeft        \n
+ *				0x5 - FrontCenter     \n
+ *				0x6 - RightCenter     \n
+ *				0x7 - RearCenter      \n
+ *				0x8 - LeftCenter      \n
+ *				0x9 - ObjectCenter    \n
+ *				0xff - Unknown         
+ *  
+ * @var ZcmLidarScalaFilteredObjectAttributes::referencePointCoordX
+ * @brief - Расстояние до базовой точки по оси X (м)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::referencePointCoordY
+ * @brief - Расстояние до базовой точки по оси Y (м)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::referencePointCoordSigmaX
+ * @brief - погрешность расстояния до базовой точки по оси X (м)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::referencePointCoordSigmaY
+ * @brief - погрешность расстояния до базовой точки по оси Y (м)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::referencePointPositionCorrCoeff
+ * @brief - ???
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::existenceProbaility
+ * @brief - вероятность существования объекта
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::absoluteVelocityX
+ * @brief - абсолютное значение скорости по X
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::absoluteVelocityY
+ * @brief - абсолютное значение скорости по Y
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::absoluteVelocitySigmaX
+ * @brief - погрешность абсолютного значения скорости по X
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::absoluteVelocitySigmaY
+ * @brief - погрешность абсолютного значения скорости по Y
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::velocityCorrCoeff
+ * @brief - ???
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::accelerationX
+ * @brief - ускорение по оси X (м/с2)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::accelerationY
+ * @brief - ускорение по оси Y (м/с2)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::accelerationSigmaX
+ * @brief - погрешность ускорения по оси X (м/с2)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::accelerationSigmaY
+ * @brief - погрешность ускорения по оси Y (м/с2)
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::accelerationCorrCoeff
+ * @brief - ???
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::possibleNbOfContourPoints
+ * @brief - количество точек контура объекта
+ * 
+ * @var ZcmLidarScalaFilteredObjectAttributes::contourPoints
+ * @brief - точки контура объекта
+ * 
+ */ 
+struct ZcmLidarScalaFilteredObjectAttributes
+{
+	int32_t objectAge;
+	int32_t hiddenStatusAge;
+	int8_t  dynamicFlagState;
+	int8_t  dynamicFlagProperty;
+
+	int32_t relativeTimeOfMeasure;
+	float positionClosestObjectPointX;
+	float positionClosestObjectPointY;
+
+	float relativeVelocityX;
+	float relativeVelocityY;
+
+	float relativeVelocitySigmaX;
+	float relativeVelocitySigmaY;
+
+	int16_t classification;
+	int16_t classificationQuality;
+	int32_t classificationAge;
+
+
+	float objectBoxSizeX;
+	float objectBoxSizeY;
+
+	float objectBoxSizeSigmaX;
+	float objectBoxSizeSigmaY;
+
+	float objectBoxOrientation;
+	float objectBoxOrientationSigma;
+	float objectBoxHeight;
+
+	int16_t referencePointLocation;
+
+	float referencePointCoordX;
+	float referencePointCoordY;
+
+	float referencePointCoordSigmaX;
+	float referencePointCoordSigmaY;
+
+	int16_t referencePointPositionCorrCoeff;
+
+	float existenceProbaility;
+
+	float absoluteVelocityX;
+	float absoluteVelocityY;
+
+	float absoluteVelocitySigmaX;
+	float absoluteVelocitySigmaY;
+
+	int16_t velocityCorrCoeff;
+
+	float accelerationX;
+	float accelerationY;
+
+	float accelerationSigmaX;
+	float accelerationSigmaY;
+
+	int16_t accelerationCorrCoeff;
+
+	int16_t possibleNbOfContourPoints;
+	ZcmLidarScalaContourPoint contourPoints[possibleNbOfContourPoints];
+}
+
+/**
+ * @struct ZcmLidarScalaObject
+ * @brief Сообщение содержит информацию об объекте
+ *
+ * @var ZcmLidarScalaObject::objectId
+ * @brief - уникальный идентификатор объекта
+ * 
+ * @var ZcmLidarScalaObject::unfilteredAttrib
+ * @brief - сырые не отфильтрованные параметры
+ * 
+ * @var ZcmLidarScalaObject::filteredAttrib
+ * @brief - параметры полученные от отслеживающей модели. \n
+ * 			Данные параметры будут получены даже если объект в данный не виден, \n
+ * 			но его существование все еще предсказывается.
+ */
+
+struct ZcmLidarScalaObject
+{
+	int64_t objectId;
+
+	ZcmLidarScalaUnfilteredObjectAttributes unfilteredAttrib;
+	ZcmLidarScalaFilteredObjectAttributes filteredAttrib;
+}
+
+
+/**
+ * @struct ZcmLidarScalaObjectScan
+ * @brief Сообщение содержит информацию о всех объектах полученных за одно сканирование
+ *
+ * @var ZcmLidarScalaObjectScan::scanNumber
+ * @brief - номер скана. Увеличивается с каждым новым сканированием
+ * 
+ * @var ZcmLidarScalaObjectScan::nbOfObjects
+ * @brief - количество обнаруженных объектов
+ * 
+ * @var ZcmLidarScalaObjectScan::hasVelocity
+ * @brief - 1 если используется скорость передаваемая в сенсор
+ * 
+ * @var ZcmLidarScalaObjectScan::objects
+ * @brief - информация об обнаруженных объектах
+ */
+struct ZcmLidarScalaObjectScan
+{
+	ZcmService service;
+	int32_t scanNumber;
+
+	int8_t hasVelocity;
+	
+	int32_t nbOfObjects;
+	ZcmLidarScalaObject objects[nbOfObjects];
+}
+

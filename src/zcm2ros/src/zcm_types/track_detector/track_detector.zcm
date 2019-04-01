@@ -1,0 +1,66 @@
+/** @mainpage Сообщение от микромодуля track_detector
+ * Данный документ содержит описание выходного сообщения
+ * с информацией об обнаруженных путях на кадре с камер машинного зрения.
+ */
+
+
+/**
+ * @struct ZcmTrackDetectTrackPoint
+ * @brief Информация о координатах линии, описывающей найденный путь.
+ *
+ * Рассчитываются относительно начала локальной системы координат транспортного средства.
+ * 
+ * @var ZcmTrackDetectTrackPoint::x  
+ * @brief - координата по оси X (м). Принимает значения от 8.74 до 116.67
+ *
+ * @var ZcmTrackDetectTrackPoint::y  
+ * @brief - координата по оси Y (м). Принимает значения от -5 до 5
+ */ 
+struct ZcmTrackDetectTrackPoint
+{
+	float x;
+	float y;
+}
+
+/**
+ * @struct ZcmTrackDetectTrack
+ * @brief Информация о пути с оценкой точности соответствия линии найденным точкам.
+ * 
+ * @var ZcmTrackDetectTrack::point_count  
+ * @brief - число точек, описывающих кривую пути
+ *
+ * @var ZcmTrackDetectTrack::quality  
+ * @brief - качественная оценка соответствия линии, описывающей кривую пути, найденным точкам на изображении (м)
+ *
+ * @var ZcmTrackDetectTrack::coefficients
+ * @brief - коэффициенты линии, описывающей траекторию движения
+ *
+ * Если линия не обнаружена, значениям коэффициентов присваивается NAN
+ *
+ * Модель линии определена формулой \f$f(x) = a_2x^2 + a_1x + a_0\f$
+ */ 
+struct ZcmTrackDetectTrack
+{
+	int16_t point_count;
+	ZcmTrackDetectTrackPoint point[point_count];
+
+	float quality;
+	double coefficients[3];
+}
+
+/**
+ * @struct ZcmTrackDetectTracksScan
+ * @brief Содержит информацию о найденных путях за одно сканирование кадра.
+ *
+ * Если пути не найдены, то значение поля track_count равняется 0, а поле track[track_count] не заполняется.
+ *
+ * @var ZcmTrackDetectTracksScan::track_count  
+ * @brief - число найденных путей. Принимает значения от 0 до 3
+ */
+struct ZcmTrackDetectTracksScan
+{
+	ZcmService service;
+
+	int8_t track_count;
+	ZcmTrackDetectTrack track[track_count];	
+}

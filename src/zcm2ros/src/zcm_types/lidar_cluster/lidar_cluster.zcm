@@ -1,0 +1,171 @@
+/** @mainpage Результат кластеризации точек от лидара */ 
+
+/**
+ * @struct ZcmLidarClusterMediumPoint
+ * @brief Сообщение содержит информацию о средней точке кластера
+ *
+ * @var ZcmLidarClusterMediumPoint::x
+ * @brief - средняя точка по оси x
+ *
+ * @var ZcmLidarClusterMediumPoint::y
+ * @brief - средняя точка по оси y
+ *
+ * @var ZcmLidarClusterMediumPoint::z
+ * @brief - средняя точка по оси z
+ *
+ * @var ZcmLidarClusterMediumPoint::predicted_x
+ * @brief - предсказанная на основе фильтра Калмана средняя точка по оси x
+ *
+ * @var ZcmLidarClusterMediumPoint::predicted_y
+ * @brief - предсказанная на основе фильтра Калмана средняя точка по оси y
+ *
+ * @var ZcmLidarClusterMediumPoint::predicted_z
+ * @brief - предсказанная на основе фильтра Калмана средняя точка по оси z
+ *
+ * @var ZcmLidarClusterMediumPoint::corrected_x
+ * @brief - скорректированная на основе фильтра Калмана и измерения средняя точка по оси x
+ *
+ * @var ZcmLidarClusterMediumPoint::corrected_y
+ * @brief - скорректированная на основе фильтра Калмана и измерения средняя точка по оси y
+ *
+ * @var ZcmLidarClusterMediumPoint::corrected_z
+ * @brief - скорректированная на основе фильтра Калмана и измерения средняя точка по оси z
+ *
+ *
+ */
+struct ZcmLidarClusterMediumPoint
+{
+    float x;
+    float y;
+    float z;
+    
+    float predicted_x;
+    float predicted_y;
+    float predicted_z;
+
+    float corrected_x;
+    float corrected_y;
+    float corrected_z;
+}
+
+/**
+ * @struct ZcmLidarClusterBoundRect
+ * @brief Сообщение содержит информацию о прямоугольнике описыыающем точки
+ *
+ * @var ZcmLidarClusterBoundRect::top_left_x
+ * @brief - левая верхняя точка по оси x
+ *
+ * @var ZcmLidarClusterBoundRect::top_left_y
+ * @brief - левая верхняя точка по оси y
+ *
+ * @var ZcmLidarClusterBoundRect::top_right_x
+ * @brief - правая верхняя точка по оси x
+ *
+ * @var ZcmLidarClusterBoundRect::top_right_y
+ * @brief - правая верхняя точка по оси y
+ *
+ * @var ZcmLidarClusterBoundRect::bottom_left_x
+ * @brief - левая нижняя точка по оси x
+ *
+ * @var ZcmLidarClusterBoundRect::bottom_left_y
+ * @brief - левая верхняя точка по оси y
+ *
+ * @var ZcmLidarClusterBoundRect::bottom_right_x
+ * @brief - правая верхняя точка по оси x
+ *
+ * @var ZcmLidarClusterBoundRect::bottom_right_y
+ * @brief - правая верхняя точка по оси y
+ *
+ * @var ZcmLidarClusterBoundRect::center_x
+ * @brief - центр прямоуголника по оси x
+ *
+ * @var ZcmLidarClusterBoundRect::center_y
+ * @brief - центр прямоуголника по оси y
+ *
+ * @var ZcmLidarClusterBoundRect::width
+ * @brief - ширина прямоугольника
+ *
+ * @var ZcmLidarClusterBoundRect::heitgh
+ * @brief - высота прямоугольника
+ *
+ * @var ZcmLidarClusterBoundRect::angle
+ * @brief - угол поворота прямоугольника
+ *
+ *
+ */
+struct ZcmLidarClusterBoundRect
+{
+    float top_left_x;
+    float top_left_y;
+
+    float top_right_x;
+    float top_right_y;
+    
+    float bottom_left_x;
+    float bottom_left_y;
+
+    float bottom_right_x;
+    float bottom_right_y;
+    
+    float center_x;
+    float center_y;
+        
+    float width;
+    float height;
+    
+    float angle;
+}
+
+/**
+ * @struct ZcmLidarCluster
+ * @brief Сообщение содержит информацию о всех точках кластера
+ *
+ * @var ZcmLidarCluster::clusterID
+ * @brief - уникальный номер кластера
+ *
+ * @var ZcmLidarCluster::pointsCount
+ * @brief - кол-во точек в кластере
+ *
+ * @var ZcmLidarCluster::scanPoints
+ * @brief - список точек в кластере
+ *
+ * @var ZcmLidarCluster::medium_point
+ * @brief - центр масс кластера
+ *
+ * @var ZcmLidarCluster::bounding_rect
+ * @brief - прямоугольник описывающий точки кластера
+ *
+ *
+ */
+struct ZcmLidarCluster
+{    
+    int32_t clusterID;
+    int32_t pointsCount;
+    ZcmLidarScalaPoint scanPoints[pointsCount];
+    ZcmLidarClusterMediumPoint medium_point;
+    ZcmLidarClusterBoundRect bounding_rect;
+}
+
+/**
+ * @struct ZcmLidarClustersList
+ * @brief Сообщение содержит информацию о всех кластерах полученных от лидара
+ *
+ * @var ZcmLidarClustersList::clustersCount
+ * @brief - кол-во распознаных кластеров
+ *
+ * @var ZcmLidarClustersList::scanNumber
+ * @brief - номер скана. Увеличивается с каждым новым сканированием
+ *
+ * @var ZcmLidarClustersList::scanClusters
+ * @brief - список кластеров
+ *
+ *
+ */
+struct ZcmLidarClustersList
+{
+    ZcmService service;
+        
+    int32_t clustersCount;
+    int32_t scanNumber;
+    ZcmLidarCluster scanClusters[clustersCount];
+}

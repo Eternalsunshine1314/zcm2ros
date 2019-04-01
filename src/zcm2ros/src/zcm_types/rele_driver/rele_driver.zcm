@@ -1,0 +1,18 @@
+/**
+ * @struct ZcmReleDriver
+ * @brief Сообщение для управления реле
+ *
+ * @var ZcmReleDriver::rele_name
+ * @brief - уникальное имя реле
+ * 
+ * @var ZcmReleDriver::rele_is_on
+ * @brief - состояние в которое необходимо перевести реле \n
+ *			true - включить \n
+ *			false - выключить
+ */
+struct ZcmReleDriver
+{
+	ZcmService service;
+	string rele_name;
+	boolean rele_is_on;
+}

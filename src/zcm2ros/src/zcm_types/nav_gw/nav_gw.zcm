@@ -1,0 +1,156 @@
+/** @mainpage Сообщение от навигатора
+ * Данный документ содержит описание сообщений для работы
+ * с навигатором NAVIS.
+ */ 
+ 
+ /**
+ * @struct ZcmNavNV08CVelocityVector
+ * @brief Скорость по каждой координате 
+ *
+ * @var ZcmNavNV08CVelocityVector::XSpeed
+ * @brief - скорость по координате X.
+ *          
+ * @var ZcmNavNV08CVelocityVector::YSpeed  
+ * @brief - Скорость по координате Y.
+ *          
+ * @var ZcmNavNV08CVelocityVector::ZSpeed         
+ * @brief - Скорость по координате Z.
+ */
+ struct ZcmNavNV08CVelocityVector 
+ {
+    double XSpeed;
+    double YSpeed;
+    double ZSpeed;
+}
+ 
+ /**
+ * @struct ZcmNavNV08CErrorVector
+ * @brief Погрешность по каждой координате и скорости для каждой координаты
+ *
+ * @var ZcmNavNV08CErrorVector::stdX
+ * @brief - СКО по координате X.
+ *          
+ * @var ZcmNavNV08CErrorVector::stdY  
+ * @brief - СКО по координате Y.
+ *          
+ * @var ZcmNavNV08CErrorVector::stdZ         
+ * @brief - СКО по координате Z.
+ *
+ * @var ZcmNavNV08CErrorVector::stdXSpeed         
+ * @brief - СКО скорости по координате X.
+ *
+ * @var ZcmNavNV08CErrorVector::stdYSpeed         
+ * @brief - СКО по скорости по координате Y.
+ *
+ * @var ZcmNavNV08CErrorVector::stdZSpeed         
+ * @brief - СКО по скорости по координате Z.
+ */
+ struct ZcmNavNV08CErrorVector 
+ {
+    double stdX;
+    double stdY;
+    double stdZ;
+    
+    double stdXSpeed;
+    double stdYSpeed;
+    double stdZSpeed;
+}
+ 
+ /**
+ * @struct ZcmNavNV08CDopVector
+ * @brief Скорость по каждой координате 
+ *
+ * @var ZcmNavNV08CDopVector::HDop
+ * @brief - снижение точности по горизонтали.
+ *          
+ * @var ZcmNavNV08CDopVector::VDop  
+ * @brief - снижение точности по вертикали.
+ *          
+ * @var ZcmNavNV08CDopVector::TDop         
+ * @brief - снижение точности по времени.
+ */
+ struct ZcmNavNV08CDopVector 
+ {
+    double HDop;
+    double VDop;
+    double TDop;
+}
+ 
+ /**
+ * @struct ZcmNavNV08CNavigationState
+ * @brief Скорость по каждой координате 
+ *
+ * @var ZcmNavNV08CNavigationState::solutionMark
+ * @brief - флаг готовности решения.
+ *          
+ * @var ZcmNavNV08CNavigationState::diffCorSign  
+ * @brief - флаг режима работы с диф. коррекцией.
+ *          
+ * @var ZcmNavNV08CNavigationState::raimControl         
+ * @brief - подтверждение данных RAIM контролем.
+ */
+ struct ZcmNavNV08CNavigationState 
+ {
+    int8_t solutionMark;
+    int8_t diffCorSign;
+    int8_t raimControl;
+}
+ 
+ /**
+ * @struct ZcmNavNV08CNavGw
+ * @brief Данные от навигатора
+ *
+ * @var ZcmNavNV08CNavGw::velocityVector
+ * @brief - скорость по трем координатам.
+ *          
+ * @var ZcmNavNV08CNavGw::errorVector  
+ * @brief - СКО по координатам и скорости.
+ *          
+ * @var ZcmNavNV08CNavGw::dopVector         
+ * @brief - значения DOP.
+ *          
+ * @var ZcmNavNV08CNavGw::navigationState         
+ * @brief - состояние навигатора.
+ *          
+ * @var ZcmNavNV08CUtmCoord  utmCoordinates;
+ * @brief - UTM координата
+ *
+ * @var ZcmNavNV08CGeographicCoord geographicCoordinates;
+ * @brief - географическая координата
+ *
+ * @var ZcmNavNV08CNavGw::speed (м/с)
+ * @brief - скорость.
+ *          
+ * @var ZcmNavNV08CNavGw::azimuth (градусы)
+ * @brief - азимут.
+ *          
+ * @var ZcmNavNV08CNavGw::x         
+ * @brief - координата X.
+ *          
+ * @var ZcmNavNV08CNavGw::y         
+ * @brief - координата Y.
+ *          
+ * @var ZcmNavNV08CNavGw::z
+ * @brief - координата Z.
+ *          
+ * @var ZcmNavNV08CNavGw::msec       
+ * @brief - время от навигатора, миллисекунды от начала эпохи UNIX.
+ */
+ struct ZcmNavNV08CNavGw 
+ {
+    ZcmService service;
+
+    ZcmNavNV08CVelocityVector velocityVector;    
+    ZcmNavNV08CErrorVector errorVector;    
+    ZcmNavNV08CDopVector dopVector;    
+    ZcmNavNV08CNavigationState navigationState;
+    
+    double speed;
+    double azimuth;
+    
+    double x;
+    double y;
+    double z;
+
+    int64_t msec;
+}

@@ -1,0 +1,403 @@
+/** @mainpage Сообщения взаимодействия с системой САУ-ГЛ (Система автоматического управления горочного локомотива)
+ */
+
+/**
+ * @struct ZcmSauglOduObstacle
+ * @brief Информация блока обнаружения препятствий о препятствии
+ *
+ * @var ZcmSauglOduObstacle::is_obstacle
+ * @brief - признак обнаружения препятствия
+ *
+ * @var ZcmSauglOduObstacle::allowed_speed
+ * @brief - текущая заданная скорость, от 0 до 25, 255 (0xff) - не установлена, км/ч
+ *
+ * @var ZcmSauglOduObstacle::target_speed
+ * @brief - целевая заданная скорость, от 0 до 25, 255 (0xff) - не установлена, км/ч
+ *
+ * @var ZcmSauglOduObstacle::target_distance
+ * @brief - расстояние до достижения целевой заданной скорости, от 0 до 254, 255 (0xff) - не установлено, м
+ *
+ * @var ZcmSauglOduObstacle::SPEED_NOT_SET
+ * @brief - константа значение скорости не установлено
+ *
+ * @var ZcmSauglOduObstacle::DISTANCE_NOT_SET
+ * @brief - константа значение расстояния не установлено
+ */
+struct ZcmSauglOduObstacle
+{
+    boolean is_obstacle;
+    int16_t allowed_speed;
+    int16_t target_speed;
+    int16_t target_distance;
+
+    const int16_t SPEED_NOT_SET = 0xff;
+    const int16_t DISTANCE_NOT_SET = 0xff;
+}
+
+/**
+ * @struct ZcmSauglOduCar
+ * @brief Информация блока обнаружения препятствий о вагоне
+ *
+ * @var ZcmSauglOduCar::is_car
+ * @brief - признак обнаружения вагона
+ *
+ * @var ZcmSauglOduCar::distance_capote
+ * @brief - расстояние до вагонов (со стороны капота), от 0 до 4094, 4095 (0xfff) - не установлено, дециметр
+ *
+ * @var ZcmSauglOduCar::distance_cabin
+ * @brief - расстояние до вагонов (со стороны кабины), от 0 до 4094, 4095 (0xfff) - не установлено, дециметр
+ */
+struct ZcmSauglOduCar
+{
+    boolean is_car;
+    int32_t distance_capote;
+    int32_t distance_cabin;
+
+    const int32_t DISTANCE_NOT_SET = 0xfff;
+}
+
+/**
+ * @struct ZcmSauglOduCommand
+ * @brief Информация блока обнаружения препятствий о командах управления
+ *
+ * @var ZcmSauglOduCommand::is_signal
+ * @brief - признак команды подачи сигнала
+ *
+ * @var ZcmSauglOduCommand::is_brake
+ * @brief - признак команды полного служебного торможения
+ */
+struct ZcmSauglOduCommand
+{
+    boolean is_signal;
+    boolean is_brake;
+}
+
+/**
+ * @struct ZcmSauglOduInfo
+ * @brief Cообщение ZCM Информация от блока обнаружения препятствий (БОП)
+ *
+ * @var ZcmSauglOduInfo::is_valid
+ * @brief - Состояние БОП (исправен или неисправен)
+ *
+ * @var ZcmSauglOduInfo::obstacle
+ * @brief - Информация о препятствии
+ *
+ * @var ZcmSauglOduInfo::car
+ * @brief - Информация о вагоне
+ *
+ * @var ZcmSauglOduInfo::command
+ * @brief - Информация о командах управления
+ *
+ * @var ZcmSauglOduInfo::counter
+ * @brief - Счетчик, от 0 до 255
+ */
+struct ZcmSauglOduInfo
+{
+    ZcmService service;
+
+    boolean is_valid;
+    ZcmSauglOduObstacle obstacle;
+    ZcmSauglOduCar car;
+    ZcmSauglOduCommand command;
+    int16_t counter;
+}
+
+/**
+ * @struct ZcmSauglOduInfoAck
+ * @brief Подтверждение САУ-ГЛ информации от БОП
+ *
+ * @var ZcmSauglOduInfoAck::counter
+ * @brief - Счетчик, от 0 до 255
+ */
+struct ZcmSauglOduInfoAck
+{
+    ZcmService service;
+
+    int16_t counter;
+}
+
+/**
+ * @struct ZcmSauglState
+ * @brief Состояние САУ-ГЛ
+ *
+ * @var ZcmSauglState::power
+ * @brief - Значение контроллера тяги, от -128 до 127
+ *
+ * @var ZcmSauglState::brake
+ * @brief - Значение позиции тормоза, от 0 до 4
+ *
+ * @var ZcmSauglState::reversor
+ * @brief - Фактическое положение реверсора
+ *
+ * @var ZcmSauglState::mode
+ * @brief - Режим управления
+ *
+ * @var ZcmSauglState::mals_operation
+ * @brief - Выполняемая операция МАЛС
+ *
+ * @var ZcmSauglState::pressure
+ * @brief - Давление в ТЦ, мПа* 100
+ *
+ * @var ZcmSauglState::speed
+ * @brief - Фактическая скорость, км/ч
+ *
+ * @var ZcmSauglState::hold_speed
+ * @brief - Поддерживаемая скорость, км/ч
+ *
+ *
+ * @var ZcmSauglState::REVERSOR_NEUTRAL
+ * @brief - Константа: Положение реверсора - нейтраль
+ *
+ * @var ZcmSauglState::REVERSOR_FORWARD
+ * @brief - Константа: Положение реверсора - вперед
+ *
+ * @var ZcmSauglState::REVERSOR_BACKWARD
+ * @brief - Константа: Положение реверсора - назад
+ *
+ *
+ * @var ZcmSauglState::MODE_HAND
+ * @brief - Константа: Режим управления - ручной (из кабины)
+ *
+ * @var ZcmSauglState::MODE_DISTANCE
+ * @brief - Константа: Режим управления - дистанционный
+ *
+ *
+ * @var ZcmSauglState::MODE_AUTO_MALS
+ * @brief - Константа: Режим управления - автоматический (МАЛС)
+ *
+ * @var ZcmSauglState::MODE_AUTO_MSR32
+ * @brief - Константа: Режим управления - автоматический (MSR-32)
+ *
+ * @var ZcmSauglState::MODE_AUTO_WAIT_SWITCH
+ * @brief - Константа: Режим управления - автоматический (ожидание переключения управляющей системы)
+ *
+ * @var ZcmSauglState::MODE_AUTO_WAIT_HAND
+ * @brief - Константа: Режим управления - автоматический ()
+ *
+ *
+ * @var ZcmSauglState::MALS_OPERATION_STANDBY
+ * @brief - Константа: Выполняемая операция МАЛС: стоянка
+ *
+ * @var ZcmSauglState::MALS_OPERATION_ROUTE
+ * @brief - Константа: Выполняемая операция МАЛС: движение до конца маршрута (в тупик или до светофора)
+ *
+ * @var ZcmSauglState::MALS_OPERATION_OCCUPIED_TRACK
+ * @brief - Константа: Выполняемая операция МАЛС: движение на занятый путь
+ *
+ * @var ZcmSauglState::MALS_OPERATION_WAIT_CONNECT
+ * @brief - Константа: Выполняемая операция МАЛС: ожидание сцепки
+ *
+ * @var ZcmSauglState::MALS_OPERATION_EXTEND_CONNECT
+ * @brief - Константа: Выполняемая операция МАЛС: растяжка автосцепки
+ */
+struct ZcmSauglState
+{
+    ZcmService service;
+
+    int8_t power;
+    int16_t brake;
+    int8_t reversor;
+    int8_t mode;
+    int8_t mals_operation;
+    int16_t pressure;
+    int16_t speed;
+    int16_t hold_speed;
+
+    const int8_t REVERSOR_NEUTRAL = 0;
+    const int8_t REVERSOR_FORWARD = 1;
+    const int8_t REVERSOR_BACKWARD = 2;
+
+    const int8_t MODE_HAND = 0;
+    const int8_t MODE_DISTANCE = 1;
+    const int8_t MODE_AUTO_MALS = 2;
+    const int8_t MODE_AUTO_MSR32 = 3;
+    const int8_t MODE_AUTO_WAIT_SWITCH = 4;
+    const int8_t MODE_AUTO_WAIT_HAND = 5;
+
+    const int8_t MALS_OPERATION_STANDBY = 0;
+    const int8_t MALS_OPERATION_ROUTE = 1;
+    const int8_t MALS_OPERATION_OCCUPIED_TRACK = 2;
+    const int8_t MALS_OPERATION_WAIT_CONNECT = 3;
+    const int8_t MALS_OPERATION_EXTEND_CONNECT = 4;
+}
+
+/**
+ * @struct ZcmSauglMssduInfo
+ * @brief Информация от МССДУ
+ *
+ * @var ZcmSauglMssduInfo::is_valid
+ * @brief - Состояние работы: МССДУ активен/неактивен
+ *
+ * @var ZcmSauglMssduInfo::is_control
+ * @brief - Запрос на управление: МССДУ не управляет/хочет управлять
+ *
+ * @var ZcmSauglMssduInfo::power
+ * @brief - Значение контроллера тяги
+ *
+ * @var ZcmSauglMssduInfo::brake
+ * @brief - Значение позиции тормоза
+ *
+ * @var ZcmSauglMssduInfo::reversor
+ * @brief - Положение реверсора
+ *
+ * @var ZcmSauglMssduInfo::command_diesel
+ * @brief - Запуск/остановка дизеля
+ *
+ * @var ZcmSauglMssduInfo::is_signal
+ * @brief - Подача свистка
+ *
+ * @var ZcmSauglMssduInfo::is_sand
+ * @brief - Подача песка
+ *
+ * @var ZcmSauglMssduInfo::is_autocoupler_off
+ * @brief - Расцепка автосцепки: 0 - автосцепки с обеих сторон сцеплены; 1 - автосцепки с обеих сторон расцеплены
+ *
+ * @var ZcmSauglMssduInfo::hold_speed
+ * @brief - Установка поддерживаемой скорости (режим круиз-контроль), км/ч
+ *
+ * @var ZcmSauglMssduInfo::counter
+ * @brief - Счетчик команд
+ *
+ *
+ * @var ZcmSauglMssduInfo::COMMAND_DIESEL_NONE
+ * @brief - Константа, команда запуск/остановка дизеля: команда не выполняется
+ *
+ * @var ZcmSauglMssduInfo::COMMAND_DIESEL_START
+ * @brief - Константа, команда запуск/остановка дизеля: запуск дизеля
+ *
+ * @var ZcmSauglMssduInfo::COMMAND_DIESEL_STOP
+ * @brief - Константа, команда запуск/остановка дизеля: остановка дизеля
+ *
+ *
+ * @var ZcmSauglMssduInfo::HOLD_SPEED_NONE
+ * @brief - Константа, установка поддерживаемой скорости: команда не выполняется
+ *
+ * @var ZcmSauglMssduInfo::HOLD_SPEED_CURRENT
+ * @brief - Константа, установка поддерживаемой скорости: установить поддерживаемую скорость, равную текущей
+ */
+struct ZcmSauglMssduInfo
+{
+    ZcmService service;
+
+    boolean is_valid;
+    boolean is_control;
+    int8_t power;
+    int16_t brake;
+    int8_t reversor;
+    int8_t command_diesel;
+    boolean is_signal;
+    boolean is_sand;
+    boolean is_autocoupler_off;
+    int16_t hold_speed;
+    int16_t counter;
+
+    const int8_t COMMAND_DIESEL_NONE = 0;
+    const int8_t COMMAND_DIESEL_START = 1;
+    const int8_t COMMAND_DIESEL_STOP = 2;
+
+    const int16_t HOLD_SPEED_NONE = 0x00ff;
+    const int16_t HOLD_SPEED_CURRENT = 0x00fe;
+}
+
+/**
+ * @struct ZcmSauglMssduInfoAck
+ * @brief Подтверждение команд управления с пульта дистанционного управления от МССДУ
+ *
+ * @var ZcmSauglMssduInfoAck::counter
+ * @brief - Счетчик команд
+ */
+struct ZcmSauglMssduInfoAck
+{
+    ZcmService service;
+
+    int16_t counter;
+}
+
+/**
+ * @struct ZcmSauglMssduTimestamp
+ * @brief Временная метка от МССДУ
+ *
+ * @var ZcmSauglMssduTimestamp::timestamp
+ * @brief - Временная метка, количество секунд, прошедших с 1 января 1970 года
+ */
+struct ZcmSauglMssduTimestamp
+{
+    ZcmService service;
+
+    int64_t timestamp;
+}
+
+/**
+ * @struct ZcmSauglDiagnostics
+ * @brief Диагностика САУ-ГЛ
+ *
+ * @var ZcmSauglDiagnostics::power
+ * @brief - Позиция контроллера машиниста в режиме тяги либо электро-динамического торможения (ЭДТ)
+ *
+ * @var ZcmSauglDiagnostics::is_power_brake
+ * @brief - Режим электро-динамического торможения (ЭДТ)
+ *
+ * @var ZcmSauglDiagnostics::is_hold_speed
+ * @brief - Поддержание скорости
+ *
+ * @var ZcmSauglDiagnostics::is_reversor_forward
+ * @brief - Фактическое положение реверсора - вперед
+ *
+ * @var ZcmSauglDiagnostics::is_reversor_backward
+ * @brief - Фактическое положение реверсора - назад
+ *
+ * @var ZcmSauglDiagnostics::mode
+ * @brief - Режим управления
+ *
+ * @var ZcmSauglDiagnostics::hold_speed
+ * @brief - Значение поддерживаемой скорости, 0.5 км/ч
+ *
+ * @var ZcmSauglDiagnostics::speed
+ * @brief - Фактическая скорость, 0.1 км/ч
+ *
+ *
+ * @var ZcmSauglDiagnostics::MODE_DISTANT_CONTROL_OFF
+ * @brief - Константа, режим управления - дистанционное управление не активно
+ *
+ * @var ZcmSauglDiagnostics::MODE_DISTANT_CONTROL
+ * @brief - Константа, режим управления - локомотив находится в режиме дистанционного управления
+ */
+struct ZcmSauglDiagnostics
+{
+    ZcmService service;
+
+    int8_t power;
+    boolean is_power_brake;
+    boolean is_hold_speed;
+    boolean is_reversor_forward;
+    boolean is_reversor_backward;
+    int16_t mode;
+    boolean is_test_request;
+    int16_t hold_speed;
+    int32_t speed;
+
+    const int16_t MODE_DISTANT_CONTROL_OFF = 0;
+    const int16_t MODE_DISTANT_CONTROL = 3;
+}
+
+/**
+ * @struct ZcmSauglBrakeDiagnostics
+ * @brief Диагностика тормоза
+ *
+ * @var ZcmSauglBrakeDiagnostics::driver_brake
+ * @brief - Позиция крана машиниста реальная
+ *
+ * @var ZcmSauglBrakeDiagnostics::brake
+ * @brief - Фактически достигнутая ступень торможения
+ *
+ * @var ZcmSauglBrakeDiagnostics::ack
+ * @brief - Признак ответа
+ */
+struct ZcmSauglBrakeDiagnostics
+{
+    ZcmService service;
+
+    int16_t driver_brake;
+    int16_t brake;
+    int16_t ack;
+}

@@ -1,0 +1,14 @@
+<launch>
+    <node pkg="zcm2ros" name="zcm2ros_converter_node" type="zcm2ros_converter_node" args="-c $(find zcm2ros)/track_fusion.conf" />
+    <node pkg="tf" type="static_transform_publisher" name="map_to_bird" args="60 0 -1 0 0 0 1 map bird_frame 1" />
+    <node pkg="tf" type="static_transform_publisher" name="map_to_lidar_pointcloud_frame" args="0 0 2 0 0 0 1 map lidar_pointcloud_frame 1" />
+    <node pkg="tf" type="static_transform_publisher" name="map_to_stereo_pair_pointcloud_frame" args="0 0 0 0 0 0 1 map stereo_pair_pointcloud_frame 1" />
+    <node pkg="tf" type="static_transform_publisher" name="map_to_lidar_marker_frame" args="0 0 2 0 0 0 1 map lidar_marker_frame 1" />
+    <node pkg="tf" type="static_transform_publisher" name="map_to_radar_marker_frame" args="0 0 0 0 0 0 1 map radar_marker_frame 1" />
+    <node pkg="tf" type="static_transform_publisher" name="map_to_track_marker_frame" args="0 0 0 0 0 0 1 map track_marker_frame 1" />
+    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find zcm2ros)/niias-loko.rviz" />
+    <node pkg="aliencontrol" type="aliencontrol" name="aliencontrol">
+        <param name="cmd" value="zcm-logplayer-gui -u ipc"/>
+    </node>
+</launch>
+

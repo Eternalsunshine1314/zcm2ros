@@ -1,0 +1,280 @@
+/** @mainpage Сообщения от лидара Lux
+ * Данный документ содержит описание сообщений для работы
+ * с лидаром Ibeo Lux.
+ */ 
+
+
+/**
+ * @struct ZcmLidarLuxPoint
+ * @brief Сообщение содержит информацию о всех точках полученных за одно сканирование
+ *
+ * @var ZcmLidarLuxPoint::echoId
+ * @brief - номер переотражения данной точки. От 0 до 2
+ * 
+ * @var ZcmLidarLuxPoint::layerId
+ * @brief - номер сканирующего луча. О - 3
+ * 
+ * @var ZcmLidarLuxPoint::flags
+ * @brief - тип точки: \n
+ * 				0x1 - transparent \n
+ * 				0x2 - осадки\n
+ * 				0x4 - земля\n
+ * 				0x8 - грязь\n
+ * 
+ * @var ZcmLidarLuxPoint::horizontalAngle
+ * @brief - значение угла в полярной системе координат (тики). \n
+ * 			Тик = ZcmLidarLuxDataScan::anglePerTick градусов 
+ * 		 
+ * @var ZcmLidarLuxPoint::radialDistance
+ * @brief - значение расстояния в полярной системе координат (м)
+ * 
+ * @var ZcmLidarLuxPoint::x
+ * @brief - расстояние до точки по оси Х в декартовой системе координат (м)
+ * 
+ * @var ZcmLidarLuxPoint::y
+ * @brief - расстояние до точки по оси Y в декартовой системе координат (м)
+ * 
+ * @var ZcmLidarLuxPoint::z
+ * @brief - расстояние до точки по оси Z в декартовой системе координат (м)
+ * 
+ * @var ZcmLidarLuxPoint::echoPulseWidth
+ * @brief - ширина импульса переотражения (м)
+ * 
+ * 
+ */ 
+struct ZcmLidarLuxPoint
+{
+	int16_t echoId;
+	int16_t layerId;
+
+	int32_t flags;
+
+	int32_t horizontalAngle;
+	float radialDistance;
+
+	float x;
+	float y;
+	float z;
+
+	float echoPulseWidth;
+}
+
+/**
+ * @struct ZcmLidarLuxDataScan
+ * @brief Сообщение содержит информацию о всех точках полученных за одно сканирование
+ *
+ * @var ZcmLidarLuxDataScan::scanNumber
+ * @brief - номер скана. Увеличивается с каждым новым сканированием
+ * 
+ * @var ZcmLidarLuxDataScan::scannerStatus
+ * @brief - состояние датчика (битовая маска): \n
+ * 				 0x0001 - motor on \n
+ * 				 0x0002 - laser on \n
+ * 				 0x0004 - internal feedback \n
+ * 				 0x0008 - set frequency reached \n
+ * 				 0x0010 - external sync signal detected \n
+ * 				 0x0020 - sync ok \n
+ * 				 0x0040 - sync master (instead of slave) \n
+ * 				 0x0100 - epw compensation on \n
+ * 				 0x0200 - system compensation on \n
+ * 				 0x0400 - start pulse compensation on \n
+ *
+ * @var ZcmLidarLuxDataScan::anglePerTick
+ * @brief - 1/32 градуса в тике
+ * 
+ * @var ZcmLidarLuxDataScan::anglePerLayer
+ * @brief - количество градусов на уровень (Layer)
+ * 
+ * @var ZcmLidarLuxDataScan::scannerHeight
+ * @brief - высота на которой расположен сенсор (м)
+ * 
+ * @var ZcmLidarLuxDataScan::nbOfPoints
+ * @brief - количество точек в одном сканировании
+ * 
+ * @var ZcmLidarLuxDataScan::scanPoints
+ * @brief - массив точек полученных за одно сканирование
+ *                         
+ */
+struct ZcmLidarLuxDataScan
+{
+    ZcmService service;
+
+	int32_t scanNumber;
+	int32_t scannerStatus;
+
+	float scannerHeight;
+
+	const float anglePerTick = 0.03125;
+	const float anglePerLayer = 0.8;
+
+	int32_t nbOfPoints;
+	ZcmLidarLuxPoint scanPoints[nbOfPoints];
+
+}
+
+
+
+/**
+ * @struct ZcmLidarLux2DPoint
+ * @brief Вспомогательная структура описывающая точки объекта
+ * 
+ */ 
+struct ZcmLidarLux2DPoint
+{
+	float posX;
+	float posY;
+}
+
+
+
+/**
+ * @struct ZcmLidarLuxObject
+ * @brief Сообщение содержит информацию об объекте
+ *
+ * @var ZcmLidarLuxObject::objectId
+ * @brief - уникальный идентификатор объекта
+ * 
+ * @var ZcmLidarLuxObject::age
+ * @brief - количество сканирований на протяжении которых данный объект отслеживается
+ * 
+ * @var ZcmLidarLuxObject::predictionAge
+ * @brief - количество сканирований на протяжении которых данный объект был предсказан, \n
+ *          без новых измерений данного объекта. Как только будет получено новое измерение \n
+ *          значение predictionAge станет равно 0
+ * 
+ * @var ZcmLidarLuxObject::relativeTimestamp
+ * @brief - время с момента начала измерения (мс)
+ * 
+ * @var ZcmLidarLuxObject::refPoint
+ * @brief - базовая точка отслеживаемого объекта (м)
+ * 
+ * @var ZcmLidarLuxObject::refPointSigma
+ * @brief - погрешность значений базовой точки (м)
+ * 
+ * @var ZcmLidarLuxObject::closestPoint
+ * @brief - ближайшая точка объекта (м)
+ * 
+ * @var ZcmLidarLuxObject::boundingBoxCenter
+ * @brief - 
+ * 
+ * @var ZcmLidarLuxObject::boundingBoxWidth
+ * @brief - 
+ * 
+ * @var ZcmLidarLuxObject::boundingBoxLength
+ * @brief - 
+ * 
+ * @var ZcmLidarLuxObject::objectBoxCenter
+ * @brief - координата центра объекта (м)
+ * 
+ * @var ZcmLidarLuxObject::objectBoxSizeX
+ * @brief - размер объекта по оси X (м)
+ * 
+ * @var ZcmLidarLuxObject::objectBoxSizeY
+ * @brief - размер объекта по оси Y (м)
+ * 
+ * @var ZcmLidarLuxObject::objectBoxOrientation
+ * @brief - угол поворота объекта (градусы)
+ * 
+ * @var ZcmLidarLuxObject::absVelocity
+ * @brief - абсолютное значение скорости по X и Y (м/c)
+ * 
+ * 
+ * @var ZcmLidarLuxObject::absVelSigmaX
+ * @brief - погрешность абсолютного значения скорости по X (м/c)
+ * 
+ * 
+ * @var ZcmLidarLuxObject::absVelSigmaY
+ * @brief - погрешность абсолютного значения скорости по Y (м/c)
+ * 
+ * 
+ * @var ZcmLidarLuxObject::relVelocity
+ * @brief - относительная скорость по оси X и Y (м/с)
+ * 
+ * 
+ * @var ZcmLidarLuxObject::objectClass
+ * @brief - классификация объекта
+ * 
+ * 					0  - Unclassified   \n
+ *					1  - UnknownSmall   \n
+ *					2  - UnknownBig     \n
+ *					3  - Pedestrian    \n
+ *					4  - Bike           \n
+ *					5  - Car            \n
+ *					6  - Truck          \n
+ *					12 - Bicycle        \n
+ * 
+ * 
+ * @var ZcmLidarLuxObject::classAge
+ * @brief - количество сканирований на протяжении которых данный объект относится к этому классу
+ * 
+ * 
+ * @var ZcmLidarLuxObject::classCertainty
+ * @brief - чем выше данное значение, тем вероятнее объект относиться к определенному классу
+ * 
+ * 
+ * @var ZcmLidarLuxObject::numContourPoints
+ * @brief - количество точек контура объекта
+ * 
+ * 
+ * @var ZcmLidarLuxObject::numContourPointsIsValid
+ * @brief - true если numContourPoints содержит валидное значение
+ * 
+ * 
+ * @var ZcmLidarLuxObject::contourPoints
+ * @brief - точки контура объекта
+ * 
+ * 
+ * 
+ */
+
+struct ZcmLidarLuxObject
+{
+	int64_t objectId;
+
+	int32_t age;
+	int32_t predictionAge;
+
+	int32_t relativeTimestamp;
+	ZcmLidarLux2DPoint refPoint;
+	ZcmLidarLux2DPoint refPointSigma;
+	ZcmLidarLux2DPoint closestPoint;
+	ZcmLidarLux2DPoint boundingBoxCenter;
+	int32_t boundingBoxWidth; // y-value
+	int32_t boundingBoxLength; // x-value
+	ZcmLidarLux2DPoint objectBoxCenter;
+	int32_t objectBoxSizeX; // x-value
+	int32_t objectBoxSizeY; // y-value
+	int16_t objectBoxOrientation; // angle in [deg/100].
+	ZcmLidarLux2DPoint absVelocity;
+	int32_t absVelSigmaX;
+	int32_t absVelSigmaY;
+	ZcmLidarLux2DPoint relVelocity;
+	int8_t  objectClass;
+	int32_t classAge;
+	int32_t classCertainty;
+	int32_t numContourPoints;
+	boolean numContourPointsIsValid;
+	ZcmLidarLux2DPoint contourPoints[numContourPoints];
+}
+
+
+/**
+ * @struct ZcmLidarLuxObjectScan
+ * @brief Сообщение содержит информацию о всех объектах полученных за одно сканирование
+ *
+ * 
+ * @var ZcmLidarLuxObjectScan::nbOfObjects
+ * @brief - количество обнаруженных объектов
+ * 
+ * @var ZcmLidarLuxObjectScan::objects
+ * @brief - информация об обнаруженных объектах
+ */
+struct ZcmLidarLuxObjectScan
+{
+	ZcmService service;
+	// int8_t hasVelocity;
+	
+	int32_t nbOfObjects;
+	ZcmLidarLuxObject objects[nbOfObjects];
+}
+

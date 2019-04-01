@@ -1,0 +1,419 @@
+/** @mainpage Сообщения от радара
+ * Данный документ содержит описание сообщений для работы
+ * с радаром Continental.
+ */ 
+
+/**
+ * @struct ZcmRadarContiClusterListStatus
+ * @brief Первое сообщение в цикле измерения(сканирования) в режиме кластеров.
+ *
+ * Содержит информацию об одном сканировании. \n
+ * ID:0x600
+ *
+ * @var ZcmRadarContiClusterListStatus::number_cluster_near
+ * @brief - количество обнаруженных кластеров в ближней зоне. 
+ *          Количество от 0 до 255.
+ *          
+ * @var ZcmRadarContiClusterListStatus::number_cluster_far  
+ * @brief - количество обнаруженных кластеров в дальней зоне. 
+ *          Количество от 0 до 255.
+ *          
+ * @var ZcmRadarContiClusterListStatus::meas_count         
+ * @brief - счетчик измерений ( от 0 до 65535, при переполнении начинается с 0)
+ * 
+ * @var ZcmRadarContiClusterListStatus::interface_version
+ * @brief - версия интерфейса CAN ( от 0 до 15)                 
+ */
+struct ZcmRadarContiClusterListStatus
+{
+    ZcmService service;
+
+    int16_t number_cluster_near; 
+
+    int16_t number_cluster_far;  
+    int32_t meas_count;        
+    int8_t interface_version;
+}
+
+/**
+ * @struct ZcmRadarContiClusterGeneral
+ * @brief Содержит информацию о позиции и скорости обнаруженного кластера.
+ * 
+ * Если за одно сканирование было обнаружено больше 250 кластеров,  
+ * то только первые 250 будут получены. \n
+ * ID:0x701
+ * 
+ * @var ZcmRadarContiClusterGeneral::id        
+ * @brief - ID кластера (от 0 до 255)
+ * 
+ * @var ZcmRadarContiClusterGeneral::dist_long  
+ * @brief - координата по оси X (м) (от -500 до 1138.2)
+ * 
+ * @var ZcmRadarContiClusterGeneral::dist_lat
+ * @brief - координата по оси Y (м) (от -102.3 до 102.3)
+ * 
+ * @var ZcmRadarContiClusterGeneral::vrel_long
+ * @brief - относительная скорость по оси X (м/с) (от -128 до 127.75)
+ * 
+ * @var ZcmRadarContiClusterGeneral::dyn_prop
+ * @brief - Динамическая характеристика объекта: \n
+ *                  0 - moving \n
+ *                  1 - stationary \n
+ *                  2 - oncoming \n
+ *                  3 - stationary candidate \n
+ *                  4 - unknown \n
+ *                  5 - crossing stationary \n
+ *                  6 - crossing moving \n
+ *                  7 - stopped \n
+ *                  
+ * @var ZcmRadarContiClusterGeneral::vrel_lat 
+ * @brief - относительная скорость по оси Y (м/с) (от -64 до 63.75)
+ * 
+ * @var ZcmRadarContiClusterGeneral::rcs
+ * @brief - эффективная площадь отражения (dBm2)  (от -64 до 63.5)
+ */
+struct ZcmRadarContiClusterGeneral
+{
+    ZcmService service;
+    int16_t id;      
+    float dist_long;   
+    float dist_lat;    
+    float vrel_long;   
+
+    int8_t dyn_prop;     
+    float vrel_lat;      
+    float rcs;         
+}
+
+/**
+ * @struct ZcmRadarContiClusterQualityInfo
+ * @brief Информация о качестве кластера
+ * 
+ * Сообщение не обязательно, приходит если включена опция SendQualite \n
+ * ID:0x702
+ * 
+ * @var ZcmRadarContiClusterQualityInfo::id
+ * @brief - ID кластера (от 0 до 255)
+ *
+ * @var ZcmRadarContiClusterQualityInfo::dist_long_rms
+ * @brief - среднеквадратическое отклонение по оси X (м) не более чем значение переменной. \n
+ *                      0 - невалидное значение
+ * 
+ * @var ZcmRadarContiClusterQualityInfo::dist_lat_rms
+ * @brief - среднеквадратическое отклонение по оси Y (м), не более чем значение переменной. \n
+ *                      0 - невалидное значение
+ * 
+ * @var ZcmRadarContiClusterQualityInfo::vrel_long_rms
+ * @brief - среднеквадратическое отклонение относительной скорости по оси X (м/с)
+ *                      не более чем значение переменной. \n
+ *                      0 - невалидное значение
+ * 
+ * @var ZcmRadarContiClusterQualityInfo::vrel_lat_rms
+ * @brief - среднеквадратическое отклонение относительной скорости по оси Y (м/с)
+ *                      не более чем значение переменной. \n
+ *                      0 - невалидное значение
+ *                      
+ * @var ZcmRadarContiClusterQualityInfo::pdh0
+ * @brief - вероятность ложного обнаружения кластера (т.е. вероятность того что обнаруженный кластер
+ *                      является шумом) (от 0.0 до 1.0), не более чем значение переменной.
+ *                      
+ * @var ZcmRadarContiClusterQualityInfo::invalid_state
+ * @brief - валидность данных: \n 
+ *                       0: Valid \n
+ *                       1: Invalid due to low RCS \n
+ *                       2: Invalid due to near-field artefact \n
+ *                       3: Invalid far range Cluster because not confirmed in near range \n
+ *                       4: Valid Cluster with low RCS \n
+ *                       5: reserved \n
+ *                       6: Invalid Cluster due to high mirror probability \n
+ *                       7: Invalid because outside sensor field of view \n
+ *                       8: Valid Cluster with azimuth correction due to elevation \n
+ *                       9: Valid Cluster with high child probability \n
+ *                       10: Valid Cluster with high probability of being a 50 deg artefact \n
+ *                       11: Valid Cluster but no local maximum \n
+ *                       12: Valid Cluster with high artefact probability \n
+ *                       13: reserved \n
+ *                       14: Invalid Cluster because it is a harmonics \n
+ *                       15: Valid Cluster above 95 m in near range \n
+ *                       16: Valid Cluster with high multi-target probability \n
+ *                       17: Valid Cluster with suspicious angle  \n  
+ *                                   
+ * @var ZcmRadarContiClusterQualityInfo::ambig_state 
+ * @brief - состояние Допплеровского решения двусмысленности \n
+ *                       0: invalid \n
+ *                       1: ambiguous \n
+ *                       2: staggered ramp \n
+ *                       3: unambiguous \n
+ *                       4: stationary candidates \n
+ */
+struct ZcmRadarContiClusterQualityInfo
+{
+    ZcmService service;
+    int16_t id;             
+    float dist_long_rms;     
+    float dist_lat_rms;      
+    float vrel_long_rms;     
+    float vrel_lat_rms;      
+    float pdh0;             
+    float invalid_state;     
+    float ambig_state;
+}
+
+
+/**
+ * @struct ZcmRadarContiObjectListStatus
+ * @brief Первое сообщение в цикле сканирования в режиме объектов 
+ * 
+ * Содержит информацию об одном сканировании \n
+ * ID: 0x60A
+ * 
+ * @var ZcmRadarContiObjectListStatus::number_objects
+ * @brief - количество обнаруженных объектов
+ *
+ * @var ZcmRadarContiObjectListStatus::meas_counter
+ * @brief - счетчик измерений ( от 0 до 65535, при переполнении начинается с 0)
+ * 
+ * @var ZcmRadarContiObjectListStatus::interface_version
+ * @brief - версия интерфейса CAN ( от 0 до 15) 
+ */
+struct ZcmRadarContiObjectListStatus
+{
+    ZcmService service;
+    int16_t number_objects;      
+    int32_t meas_counter;       
+    int8_t interface_version;   
+
+}
+
+/**
+ * @struct ZcmRadarContiObjectGeneralInfo
+ * @brief Информация о расположении и скорости объектов.
+ * 
+ * Сообщение приходит для каждого обнаруженного объекта \n
+ * ID: 0x60B
+ * 
+ * @var ZcmRadarContiObjectGeneralInfo::id
+ * @brief - ID объекта (от 0 до 255)
+ * 
+ * @var ZcmRadarContiObjectGeneralInfo::dist_long
+ * @brief - координата по оси X (м) (от -500 до 1138.2)
+ * 
+ * @var ZcmRadarContiObjectGeneralInfo::dist_lat
+ * @brief - координата по оси Y (м) (от -102.3 до 102.3)
+ * 
+ * @var ZcmRadarContiObjectGeneralInfo::vrel_long
+ * @brief - относительная скорость по оси X (м/с) (от -128 до 127.75)
+ * 
+ * @var ZcmRadarContiObjectGeneralInfo::dyn_prop
+ * @brief - Динамическая характеристика объекта: \n
+ *                  0 - moving \n
+ *                  1 - stationary \n
+ *                  2 - oncoming \n
+ *                  3 - stationary candidate \n
+ *                  4 - unknown \n
+ *                  5 - crossing stationary \n
+ *                  6 - crossing moving \n
+ *                  7 - stopped \n
+ *                  
+ * @var ZcmRadarContiObjectGeneralInfo::vrel_lat
+ * @brief - относительная скорость по оси Y (м/с) (от -64 до 63.75)
+ * 
+ * @var ZcmRadarContiObjectGeneralInfo::rcs
+ * @brief - эффективная площадь отражения (dBm2)  (от -64 до 63.5) 
+ */
+struct ZcmRadarContiObjectGeneralInfo
+{
+    ZcmService service;
+    int16_t id;       
+    float dist_long;   
+    float dist_lat;    
+    float vrel_long;   
+
+    int8_t dyn_prop;   
+    float vrel_lat;    
+    float rcs;      
+}
+
+/**
+ * @struct ZcmRadarContiObjectQualityInfo
+ * @brief Содержит информацию о качестве обнаруженных объектов
+ * 
+ * Сообщение не обязательное, приходит только если включена опция SendQuality \n
+ * ID: 0x60C 
+ * 
+ * @var ZcmRadarContiObjectQualityInfo::id
+ * @brief - ID объекта (от 0 до 255)
+ * 
+ * @var ZcmRadarContiObjectQualityInfo::dist_long_rms
+ * @brief - среднеквадратическое отклонение по оси X (м) не более чем значение переменной. \n
+ *                      0 - невалидное значение
+ *                      
+ * @var ZcmRadarContiObjectQualityInfo::dist_lat_rms
+ * @brief - среднеквадратическое отклонение по оси Y (м) не более чем значение переменной. \n
+ *                      0 - невалидное значение
+ *                      
+ * @var ZcmRadarContiObjectQualityInfo::vrel_long_rms
+ * @brief - среднеквадратическое отклонение относительной скорости по оси X (м/с)
+ *                      не более чем значение переменной. \n
+ *                      0 - невалидное значение
+ *                      
+ * @var ZcmRadarContiObjectQualityInfo::vrel_lat_rms
+ * @brief - среднеквадратическое отклонение относительной скорости по оси Y (м/с)
+ *                      не более чем значение переменной. \n
+ *                      0 - невалидное значение
+ *                      
+ * @var ZcmRadarContiObjectQualityInfo::arel_lat_rms
+ * @brief - среднеквадратическое отклонение относительного ускорения по оси Y (м/с) 
+ *                      не более чем значение переменной. \n
+ *                      0 - невалидное значение
+ *                      
+ * @var ZcmRadarContiObjectQualityInfo::areal_long_rms
+ * @brief - среднеквадратическое отклонение относительного ускорения по оси X (м/с)
+ *                      не более чем значение переменной. \n
+ *                      0 - невалидное значение
+ *                      
+ * @var ZcmRadarContiObjectQualityInfo::orientation_rms
+ * @brief - среднеквадратическое отклонение угла ориентации (градусы)
+ *                      не более чем значение переменной. \n
+ *                      0 - невалидное значение
+ *                      
+ * @var ZcmRadarContiObjectQualityInfo::meas_state
+ * @brief - состояние измерения: \n
+ *                      0 - объект удален - если в следующем цикле объект с данным ID уже не существует \n
+ *                      1 - новый объект \n
+ *                      2 - измеренный объект \n
+ *                      3 - предсказанных объект \n
+ *                      4 - удален по причине объединения с другим объектом \n
+ *                      5 - новый объект создан после объединения с другим объектом 
+ *                      
+ * @var prob_of_exist
+ * @brief- вероятность существования объекта (от 0.0 до 1.0)
+ */
+struct ZcmRadarContiObjectQualityInfo
+{
+    ZcmService service;
+    int16_t id;               
+    float dist_long_rms;     
+    float vrel_long_rms;     
+    float dist_lat_rms;      
+    float vrel_lat_rms;      
+    float arel_lat_rms;      
+    float areal_long_rms;    
+    float orientation_rms;
+
+    int8_t meas_state;       
+    float prob_of_exist;      
+}
+
+/**
+ * @struct ZcmRadarContiObjectExtendedInfo
+ * @brief Расширенная информация об объекте
+ * 
+ * 
+ * Сообщение не обязательное, приходит если включена опция SendExtInfo \n
+ * ID: 0x60D
+ * 
+ * @var ZcmRadarContiObjectExtendedInfo::id 
+ * @brief - ID объекта (от 0 до 255)
+ * 
+ * @var ZcmRadarContiObjectExtendedInfo::arel_long
+ * @brief - относительное ускорение по оси X (м/с2)
+ * 
+ * @var ZcmRadarContiObjectExtendedInfo::arel_lat
+ * @brief - относительное ускорение по оси Y (м/с2)
+ * 
+ * @var ZcmRadarContiObjectExtendedInfo::obj_class
+ * @brief - класс объекта: \n
+ *                         0: point \n
+ *                         1: car \n
+ *                         2: truck \n
+ *                         3: pedestrian \n
+ *                         4: motorcycle \n
+ *                         5: bicycle \n
+ *                         6: wide \n
+
+ * @var ZcmRadarContiObjectExtendedInfo::orientation_angel
+ * @brief - угол ориентации объекта (от -180.0 до 180.0) (градусы)
+ * 
+ * @var ZcmRadarContiObjectExtendedInfo::obj_len
+ * @brief - длина объекта (от 0 до 51) (м)
+ * 
+ * @var ZcmRadarContiObjectExtendedInfo::obj_width
+ * @brief - ширина объекта (от 0 до 51) (м)
+ * 
+ */
+struct ZcmRadarContiObjectExtendedInfo
+{
+    ZcmService service;
+    int16_t id;                
+    float arel_long;           
+    float arel_lat;            
+    int8_t obj_class;         
+    float orientation_angel; 
+    float obj_len;           
+    float obj_width;         
+}
+
+
+
+struct ZcmRadarContiObject
+{
+
+    int16_t id;
+    ZcmRadarContiObjectGeneralInfo general;
+    ZcmRadarContiObjectQualityInfo quality;
+    ZcmRadarContiObjectExtendedInfo extended;
+}
+
+
+struct ZcmRadarContiCluster
+{
+
+    int16_t id;
+    ZcmRadarContiClusterGeneral general;
+    ZcmRadarContiClusterQualityInfo quality;
+
+}
+
+/**
+ * @struct ZcmRadarContiObjectsScan
+ * @brief Все сообщения полученные на одно сканирование в режиме объектов
+ */
+struct ZcmRadarContiObjectsScan
+{
+    ZcmService service;
+
+    int16_t scan_size;
+
+    ZcmRadarContiObject objects[scan_size];
+
+    // ZcmRadarContiObjectListStatus list_status;
+
+    // int16_t general_list_size;
+    // int16_t quality_list_size;
+    // int16_t extended_list_size;
+
+    // ZcmRadarContiObjectGeneralInfo general[general_list_size];
+    // ZcmRadarContiObjectQualityInfo quality[quality_list_size];
+    // ZcmRadarContiObjectExtendedInfo extended[extended_list_size];
+}
+
+/**
+ * @struct ZcmRadarContiClustersScan
+ * @brief Все сообщения полученные за одно сканирование в режиме кластеров
+ */
+struct ZcmRadarContiClustersScan
+{
+    ZcmService service;
+
+    int16_t scan_size;
+
+    ZcmRadarContiCluster clusters[scan_size];
+    // ZcmRadarContiClusterListStatus list_status;
+
+    // int16_t general_list_size;
+    // int16_t quality_list_size;
+    
+    // ZcmRadarContiClusterGeneral general[general_list_size];
+    // ZcmRadarContiClusterQualityInfo quality[quality_list_size];
+}

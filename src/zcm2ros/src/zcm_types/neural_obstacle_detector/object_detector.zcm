@@ -1,0 +1,69 @@
+/** @mainpage Результат работы детектора на основе нейронных сетей */
+
+/**
+ * @struct ZcmObstacleDetectorPoint2D
+ * @brief Сообщение содержит координаты точки относительно общей системы координат
+ *
+ * @var ZcmObstacleDetectorPoint2D::x
+ * @brief - смещение точки по оси x
+ *
+ * @var ZcmObstacleDetectorPoint2D::y
+ * @brief - смещение точки по оси y
+ *
+ *
+ */
+struct ZcmObstacleDetectorPoint2D
+{
+    double x;
+    double y;
+}
+
+/**
+ * @struct ZcmObstacleDetectorObject
+ * @brief Сообщение содержит координаты объекта относительно лидара
+ *
+ *
+ * @var ZcmObstacleDetectorObject::generalPoint
+ * @brief - средняя точка нижней части bounding box'a
+ * @var ZcmObstacleDetectorObject::obstacle_type
+ * @brief - класс объекта: \n
+ *                  1 - person \n
+ *                  2 - traffic_light \n
+ *                  3 - car \n
+ * @var ZcmObstacleDetectorObject::label
+ * @brief - строка, характеризующая класс объекта
+ *
+ * @var ZcmObstacleDetectorObject::probability
+ * @brief - вероятностная характеристика принадлежности препятствия к опознанному классу, принимает значения от 0 до 1
+ *
+ *
+ */
+struct ZcmObstacleDetectorObject
+{
+
+    ZcmObstacleDetectorPoint2D generalPoint;
+    int8_t obstacle_type;
+    string label;
+    double probability;
+
+}
+
+/**
+ * @struct ZcmDetectorFoundedObstacles
+ * @brief Сообщение содержит координаты точки относительно лидара
+ *
+ * @var ZcmDetectorFoundedObstacle::count
+ * @brief - количество найденных препятствий
+ *
+ * @var ZcmDetectorFoundedObstacle::obstacles
+ * @brief - список найденных препятствий
+ *
+ *
+ */
+struct ZcmDetectorFoundedObstacles
+{
+    ZcmService service;
+
+    int32_t count;
+    ZcmObstacleDetectorObject obstacles[count];
+}

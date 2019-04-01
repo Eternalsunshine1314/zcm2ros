@@ -1,0 +1,50 @@
+
+/**
+ * @struct ZcmImuNXP
+ * @brief Информация от акселерометра
+ *
+ * @var ZcmImuNXP::acc_x
+ * @brief -ускорение по оси X в g
+ *          
+ * @var ZcmImuNXP::acc_y  
+ * @brief - ускорение по оси Y в g
+ *          
+ * @var ZcmImuNXP::acc_z         
+ * @brief - ускорение по оси Z в g
+ * 
+ * @var ZcmImuNXP::magn_x
+ * @brief -магнитуда по оси X в T
+ *          
+ * @var ZcmImuNXP::magn_y  
+ * @brief - магнитуда по оси Y в T
+ *          
+ * @var ZcmImuNXP::_z         
+ * @brief - магнитуда по оси Z в T
+ * 
+ * @var ZcmImuNXP::gyro_x
+ * @brief -угловая скорость по оси X в градусы/сек
+ *          
+ * @var ZcmImuNXP::gyro_y  
+ * @brief - угловая скорость по оси Y в градусы/сек
+ *          
+ * @var ZcmImuNXP::gyro_z         
+ * @brief - угловая скорость по оси Z в градусы/сек
+ *             
+ */
+struct ZcmImuNXP
+{
+    ZcmService service;
+    double acc_x;
+    double acc_y;
+    double acc_z;
+
+    double magn_x;
+    double magn_y;
+    double magn_z;
+
+    boolean has_gyro; 
+
+    double gyro_x;
+    double gyro_y;
+    double gyro_z;
+}
