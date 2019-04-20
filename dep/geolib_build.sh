@@ -10,6 +10,8 @@ git clone git://git.code.sourceforge.net/p/geographiclib/code geographiclib
 
 cd geographiclib
 mkdir build
-./configure
+# ./configure
+cd build
+cmake ..
 make -j4
 echo $SUDO_PASSWORD | sudo -S  make install
