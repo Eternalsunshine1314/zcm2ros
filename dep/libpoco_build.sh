@@ -7,7 +7,8 @@ then
 fi
 
 
-git clone git@github.com:pocoproject/poco.git
+# git clone git@github.com:pocoproject/poco.git # due to "Permission denied (publickey)""
+git clone https://github.com/pocoproject/poco
 cd poco
 ./configure
 make -j4
