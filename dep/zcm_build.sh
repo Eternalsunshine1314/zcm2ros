@@ -33,7 +33,7 @@ echo $SUDO_PASSWORD | sudo -S make install
 cd ../..
 
 echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/" >> ~/.bashrc
-echo $SUDO_PASSWORD | sudo -S JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/ ./waf configure --use-all
+echo $SUDO_PASSWORD | sudo -S JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/ ./waf configure --use-java --use-nodejs --use-python --use-zmq --use-elf --use-dev --use-inproc --use-ipc --use-udpm --use-serial
 echo $SUDO_PASSWORD | sudo -S ./waf build 
 echo $SUDO_PASSWORD | sudo -S ./waf install 
 
