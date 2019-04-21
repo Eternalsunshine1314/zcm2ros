@@ -27,3 +27,15 @@ TROUBLESHOOTING TIPS:
 3) _Problems with CV_LOAD_IMAGE_COLOR_  
    If there is a problem kind of "Invalid symbol: `CV_LOAD_IMAGE_COLOR`" or etc, you are probably trying to compile program againt opencv 3.0 (your opencv version installed is 3.0).  
    In this case replace `CV_LOAD_IMAGE_COLOR` by `cv::IMREAD_COLOR` in `zcm2ros/src/zcm2roc/src/converter.cpp`
+
+4) _Problems with Java Virtual Machine_  
+   In case when you have problems like:  
+   ```
+   Unrecognized option: -Xincgc (or something else)
+   Error: Could not create the Java Virtual Machine
+   ```
+   First run `java -version`. If your java version is defferent than 8, you need to switch its usage by:  
+   `sudo update-alternatives --config java`  
+   and than from the list choose v.8 (because it's used in the project)
+   
+   Further when you need different java version simply switch its usage
