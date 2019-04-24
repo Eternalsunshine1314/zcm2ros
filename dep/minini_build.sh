@@ -6,9 +6,11 @@ then
 	read -s SUDO_PASSWORD
 fi
 
-git clone http://student@192.168.0.203:17990/scm/~n.zakhvataev/minini.git
+# git clone http://student@192.168.0.203:17990/scm/~n.zakhvataev/minini.git
+git clone https://github.com/AuthenticEshkinKot/minIni
 
-cd minini
+# cd minini
+cd minIni
 mkdir build
 cd build
 cmake ..
